@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct K {
+    //all the custom colours
     struct Colors{
         static let background1 = Color("BackgroundMainColor")
         static let background2 = Color("BackgoundSecondaryColor")

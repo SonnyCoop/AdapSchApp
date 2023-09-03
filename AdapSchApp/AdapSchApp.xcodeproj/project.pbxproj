@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		300D80CD2AA4F1B00014B284 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D80CC2AA4F1B00014B284 /* CustomButton.swift */; };
+		300D80D02AA5129A0014B284 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D80CF2AA5129A0014B284 /* Task.swift */; };
+		300D80D32AA513830014B284 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 300D80D22AA513830014B284 /* Realm */; };
+		300D80D52AA513830014B284 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 300D80D42AA513830014B284 /* RealmSwift */; };
 		30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */; };
 		30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* CalendarView.swift */; };
 		30D38C752AA4A31F00509C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C742AA4A31F00509C21 /* Assets.xcassets */; };
@@ -15,9 +19,13 @@
 		30D38C822AA4A78500509C21 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C812AA4A78500509C21 /* TaskView.swift */; };
 		30D38C842AA4A7C100509C21 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C832AA4A7C100509C21 /* SettingsView.swift */; };
 		30D38C862AA4AD7700509C21 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C852AA4AD7700509C21 /* K.swift */; };
+		30D38C882AA4D97400509C21 /* DarkModeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C872AA4D97400509C21 /* DarkModeSettings.swift */; };
+		30D38C8A2AA4E9F000509C21 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C892AA4E9F000509C21 /* AddTaskView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		300D80CC2AA4F1B00014B284 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		300D80CF2AA5129A0014B284 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdapSchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapSchAppApp.swift; sourceTree = "<group>"; };
 		30D38C722AA4A31E00509C21 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -27,6 +35,8 @@
 		30D38C812AA4A78500509C21 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		30D38C832AA4A7C100509C21 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		30D38C852AA4AD7700509C21 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
+		30D38C872AA4D97400509C21 /* DarkModeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettings.swift; sourceTree = "<group>"; };
+		30D38C892AA4E9F000509C21 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,12 +44,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				300D80D52AA513830014B284 /* RealmSwift in Frameworks */,
+				300D80D32AA513830014B284 /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		300D80CE2AA512790014B284 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				300D80CF2AA5129A0014B284 /* Task.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		30D38C642AA4A31E00509C21 = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */,
+				300D80CE2AA512790014B284 /* Model */,
 				30D38C7E2AA4A38E00509C21 /* View */,
 				30D38C742AA4A31F00509C21 /* Assets.xcassets */,
 				30D38C762AA4A31F00509C21 /* Preview Content */,
@@ -83,6 +104,9 @@
 				30D38C812AA4A78500509C21 /* TaskView.swift */,
 				30D38C722AA4A31E00509C21 /* CalendarView.swift */,
 				30D38C832AA4A7C100509C21 /* SettingsView.swift */,
+				30D38C872AA4D97400509C21 /* DarkModeSettings.swift */,
+				30D38C892AA4E9F000509C21 /* AddTaskView.swift */,
+				300D80CC2AA4F1B00014B284 /* CustomButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -103,6 +127,10 @@
 			dependencies = (
 			);
 			name = AdapSchApp;
+			packageProductDependencies = (
+				300D80D22AA513830014B284 /* Realm */,
+				300D80D42AA513830014B284 /* RealmSwift */,
+			);
 			productName = AdapSchApp;
 			productReference = 30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */;
 			productType = "com.apple.product-type.application";
@@ -131,6 +159,9 @@
 				Base,
 			);
 			mainGroup = 30D38C642AA4A31E00509C21;
+			packageReferences = (
+				300D80D12AA513830014B284 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			productRefGroup = 30D38C6E2AA4A31E00509C21 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -157,8 +188,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30D38C882AA4D97400509C21 /* DarkModeSettings.swift in Sources */,
 				30D38C842AA4A7C100509C21 /* SettingsView.swift in Sources */,
+				300D80D02AA5129A0014B284 /* Task.swift in Sources */,
+				300D80CD2AA4F1B00014B284 /* CustomButton.swift in Sources */,
 				30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */,
+				30D38C8A2AA4E9F000509C21 /* AddTaskView.swift in Sources */,
 				30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */,
 				30D38C862AA4AD7700509C21 /* K.swift in Sources */,
 				30D38C802AA4A64300509C21 /* ContentView.swift in Sources */,
@@ -361,6 +396,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		300D80D12AA513830014B284 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		300D80D22AA513830014B284 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 300D80D12AA513830014B284 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		300D80D42AA513830014B284 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 300D80D12AA513830014B284 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 30D38C652AA4A31E00509C21 /* Project object */;
 }
