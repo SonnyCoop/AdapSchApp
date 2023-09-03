@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */; };
-		30D38C732AA4A31E00509C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* ContentView.swift */; };
+		30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* CalendarView.swift */; };
 		30D38C752AA4A31F00509C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C742AA4A31F00509C21 /* Assets.xcassets */; };
 		30D38C782AA4A31F00509C21 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C772AA4A31F00509C21 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -16,7 +16,7 @@
 /* Begin PBXFileReference section */
 		30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdapSchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapSchAppApp.swift; sourceTree = "<group>"; };
-		30D38C722AA4A31E00509C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		30D38C722AA4A31E00509C21 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		30D38C742AA4A31F00509C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		30D38C772AA4A31F00509C21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,7 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */,
-				30D38C722AA4A31E00509C21 /* ContentView.swift */,
+				30D38C7E2AA4A38E00509C21 /* View */,
 				30D38C742AA4A31F00509C21 /* Assets.xcassets */,
 				30D38C762AA4A31F00509C21 /* Preview Content */,
 			);
@@ -65,6 +65,14 @@
 				30D38C772AA4A31F00509C21 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		30D38C7E2AA4A38E00509C21 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				30D38C722AA4A31E00509C21 /* CalendarView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,7 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30D38C732AA4A31E00509C21 /* ContentView.swift in Sources */,
+				30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */,
 				30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
