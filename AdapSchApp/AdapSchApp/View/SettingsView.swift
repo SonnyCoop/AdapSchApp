@@ -9,12 +9,17 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        ZStack{
-            K.Colors.background1.ignoresSafeArea()
-            VStack{
-                Text("Settings")
+        NavigationView{
+            ZStack{
+                //setting background colour
+                K.Colors.background1.ignoresSafeArea()
+                List{
+                    //segue to dark more settings
+                    NavigationLink("Light/Dark Mode", destination: DarkModeSettings())
+                }
             }
-        }
+            
+        }.navigationTitle("Settings")
     }
 }
 

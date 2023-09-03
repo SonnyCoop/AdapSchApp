@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		300D80CD2AA4F1B00014B284 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D80CC2AA4F1B00014B284 /* CustomButton.swift */; };
 		30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */; };
 		30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* CalendarView.swift */; };
 		30D38C752AA4A31F00509C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C742AA4A31F00509C21 /* Assets.xcassets */; };
@@ -15,9 +16,12 @@
 		30D38C822AA4A78500509C21 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C812AA4A78500509C21 /* TaskView.swift */; };
 		30D38C842AA4A7C100509C21 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C832AA4A7C100509C21 /* SettingsView.swift */; };
 		30D38C862AA4AD7700509C21 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C852AA4AD7700509C21 /* K.swift */; };
+		30D38C882AA4D97400509C21 /* DarkModeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C872AA4D97400509C21 /* DarkModeSettings.swift */; };
+		30D38C8A2AA4E9F000509C21 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C892AA4E9F000509C21 /* AddTaskView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		300D80CC2AA4F1B00014B284 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdapSchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapSchAppApp.swift; sourceTree = "<group>"; };
 		30D38C722AA4A31E00509C21 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -27,6 +31,8 @@
 		30D38C812AA4A78500509C21 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		30D38C832AA4A7C100509C21 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		30D38C852AA4AD7700509C21 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
+		30D38C872AA4D97400509C21 /* DarkModeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettings.swift; sourceTree = "<group>"; };
+		30D38C892AA4E9F000509C21 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +89,9 @@
 				30D38C812AA4A78500509C21 /* TaskView.swift */,
 				30D38C722AA4A31E00509C21 /* CalendarView.swift */,
 				30D38C832AA4A7C100509C21 /* SettingsView.swift */,
+				30D38C872AA4D97400509C21 /* DarkModeSettings.swift */,
+				30D38C892AA4E9F000509C21 /* AddTaskView.swift */,
+				300D80CC2AA4F1B00014B284 /* CustomButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -157,8 +166,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30D38C882AA4D97400509C21 /* DarkModeSettings.swift in Sources */,
 				30D38C842AA4A7C100509C21 /* SettingsView.swift in Sources */,
+				300D80CD2AA4F1B00014B284 /* CustomButton.swift in Sources */,
 				30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */,
+				30D38C8A2AA4E9F000509C21 /* AddTaskView.swift in Sources */,
 				30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */,
 				30D38C862AA4AD7700509C21 /* K.swift in Sources */,
 				30D38C802AA4A64300509C21 /* ContentView.swift in Sources */,

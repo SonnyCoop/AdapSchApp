@@ -8,18 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    //upon creation set the tab bar to the appropriate colours
     init(){
         UITabBar.appearance().backgroundColor = UIColor(K.Colors.tab)
         UITabBar.appearance().unselectedItemTintColor = UIColor(K.Colors.text)
     }
+    
+    //set the default screen to calendar
     @State private var selection: Tab = .calendar
     
+    //options for the tab
     enum Tab {
         case calendar
         case tasks
         case settings
     }
     var body: some View {
+        
+        //MARK: - TabView Code
         TabView(selection: $selection) {
             CalendarView()
                 .tabItem{
@@ -39,7 +45,8 @@ struct ContentView: View {
                 }
                 .tag(Tab.settings)
         }
-        .accentColor(K.Colors.background2)
+        .accentColor(K.Colors.background2) //colour for selected
+        
     }
     
 }
