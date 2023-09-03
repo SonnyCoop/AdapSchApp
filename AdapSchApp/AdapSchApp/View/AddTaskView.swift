@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct AddTaskView: View {
     //values to be saved
     @State private var title: String = ""
     @State private var hours: Int = 0
     @State private var minutes: Int = 0
+    
+    @ObservedResults(Task.self) var tasks
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView{
@@ -46,6 +51,16 @@ struct AddTaskView: View {
                     Button("Add") {
                         //add to database
                         print("Title: \($title), Time: \($hours)hr \($minutes)mins")
+                        
+                        //creating task record
+                        let task = Task()
+                        task.title = title
+                        task.time = hours * 60 + minutes
+                        
+                        $tasks.append(task)
+                        
+                        //closes window
+                        dismiss()
                     }
                     .buttonStyle(CustomButton())
 
