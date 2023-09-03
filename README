@@ -1,1 +1,10 @@
-<h1>Adaptive Scheduling App<h1>
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <title> Adaptive Scheduling App </title>
+   </head>
+   <body>
+      <h1>Adaptive Scheduling App<h1>
+   </body>
+</html>
