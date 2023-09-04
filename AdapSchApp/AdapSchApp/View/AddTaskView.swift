@@ -30,8 +30,20 @@ struct AddTaskView: View {
                     //display buttons
                     HStack{
                         ForEach(screens, id: \.self){ screen in
-                            Text(screen)
-                                .padding()
+                            var title: String {
+                                switch screen {
+                                case "daily" :
+                                    return "Daily \n Task"
+                                case "weekly" :
+                                    return "Weekly \n Task"
+                                default:
+                                    return "Downtime"
+                                }
+                            }
+                            Text(title)
+                                .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+                                .frame(maxWidth: . infinity, maxHeight: .infinity)
+                                .multilineTextAlignment(.center)
                                 .background(selectedScreen == screen ? K.Colors.tab : K.Colors.background1)
                                 .foregroundStyle(K.Colors.text)
                                 .cornerRadius(25)
@@ -41,7 +53,7 @@ struct AddTaskView: View {
                                 }
                             
                         }
-                    }
+                    }.frame(maxHeight: 80)
                     //MARK: - Daily display
                     if selectedScreen == "daily"{
                         HStack{
@@ -111,5 +123,6 @@ struct AddTaskView: View {
 struct AddTaskView_Previews: PreviewProvider {
     static var previews: some View {
         AddTaskView()
+            
     }
 }
