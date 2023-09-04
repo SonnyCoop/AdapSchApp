@@ -26,8 +26,8 @@ struct AddTaskView: View {
             ZStack{
                 //background colour
                 K.Colors.background1.ignoresSafeArea()
-                //the 'form'
                 VStack{
+                    //display buttons
                     HStack{
                         ForEach(screens, id: \.self){ screen in
                             Text(screen)
@@ -42,28 +42,40 @@ struct AddTaskView: View {
                             
                         }
                     }
-                    HStack{
-                        Text("Title:")
-                        TextField("Enter title", text: $title)
+                    //MARK: - Daily display
+                    if selectedScreen == "daily"{
+                        HStack{
+                            Text("Title:")
+                            TextField("Enter title", text: $title)
+                        }
+                        
+                        Text("Estimated Time")
+                        HStack{
+                            Picker("Estimated Time", selection: $hours){
+                                ForEach(0...30, id:\.self){
+                                    number in
+                                    Text("\(number)")
+                                }
+                            }.pickerStyle(.wheel)
+                            Text("hours")
+                            Picker("Estimated Time", selection: $minutes){
+                                ForEach((0...11).map {$0 * 5}, id:\.self){
+                                    number in
+                                    Text("\(number)")
+                                }
+                            }.pickerStyle(.wheel)
+                            Text("mins")
+                        }
+                    }
+                    //MARK: - Weekly Display
+                    else if selectedScreen == "weekly"{
+                        Text("Weekly stuff")
+                    }
+                    //MARK: - Downtime Display
+                    else{
+                        Text("Downtime stuff")
                     }
                     
-                    Text("Estimated Time")
-                    HStack{
-                        Picker("Estimated Time", selection: $hours){
-                            ForEach(0...30, id:\.self){
-                                number in
-                                Text("\(number)")
-                            }
-                        }.pickerStyle(.wheel)
-                        Text("hours")
-                        Picker("Estimated Time", selection: $minutes){
-                            ForEach((0...11).map {$0 * 5}, id:\.self){
-                                number in
-                                Text("\(number)")
-                            }
-                        }.pickerStyle(.wheel)
-                        Text("mins")
-                    }
                     Spacer()
                     Button("Add") {
                         //add to database
