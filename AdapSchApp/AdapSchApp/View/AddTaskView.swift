@@ -14,7 +14,12 @@ struct AddTaskView: View {
     @State private var hours: Int = 0
     @State private var minutes: Int = 0
     @State private var selectedScreen = "daily"
-    
+    @State private var showingAlert = false
+    @State private var category = "No Category"
+    @State private var newCategory = ""
+
+    //setting up realm
+    @ObservedResults(Category.self) var categories
     @ObservedResults(Task.self) var tasks
     
     @Environment(\.dismiss) private var dismiss
@@ -56,28 +61,59 @@ struct AddTaskView: View {
                     }.frame(maxHeight: 80)
                     //MARK: - Daily display
                     if selectedScreen == "daily"{
-                        HStack{
-                            Text("Title:")
-                            TextField("Enter title", text: $title)
-                        }
+                        Form{
+                            HStack{
+                                Text("Title:")
+                                TextField("Enter title", text: $title)
+                                    .foregroundColor(K.Colors.text)
+                            }
+                            //category picker
+                            HStack{
+                                Picker("Category:", selection: $category){
+                                    Text("No Category")
+                                        .tag("No Category")
+                                    ForEach(categories){
+                                        cat in
+                                        Text("\(cat.title)")
+                                            .tag(cat.title)
+                                            .foregroundColor(K.Colors.text)
+                                    }
+                                    Text("Add Category +")
+                                        .tag("add category")
+                                }.onChange(of: category, perform: { newValue in
+                                    if newValue == "add category"{
+                                        showingAlert = true
+                                    }
+                                })
+                            }
+                            VStack{
+                                Text("Estimated Time")
+                                HStack{
+                                    Picker("Estimated Time", selection: $hours){
+                                        ForEach(0...30, id:\.self){
+                                            number in
+                                            Text("\(number)")
+                                                .foregroundColor(K.Colors.text)
+                                        }
+                                    }.pickerStyle(.wheel)
+                                    Text("hours")
+                                    Picker("Estimated Time", selection: $minutes){
+                                        ForEach((0...11).map {$0 * 5}, id:\.self){
+                                            number in
+                                            Text("\(number)")
+                                                .foregroundColor(K.Colors.text)
+                                        }
+                                    }.pickerStyle(.wheel)
+                                    Text("mins")
+                                }
+                            }
+//                            Button("Advanced"){
+//
+//                            }
+                            
+                        }.modifier(FormHiddenBackground())
+                        .foregroundColor(K.Colors.text)
                         
-                        Text("Estimated Time")
-                        HStack{
-                            Picker("Estimated Time", selection: $hours){
-                                ForEach(0...30, id:\.self){
-                                    number in
-                                    Text("\(number)")
-                                }
-                            }.pickerStyle(.wheel)
-                            Text("hours")
-                            Picker("Estimated Time", selection: $minutes){
-                                ForEach((0...11).map {$0 * 5}, id:\.self){
-                                    number in
-                                    Text("\(number)")
-                                }
-                            }.pickerStyle(.wheel)
-                            Text("mins")
-                        }
                     }
                     //MARK: - Weekly Display
                     else if selectedScreen == "weekly"{
@@ -115,6 +151,45 @@ struct AddTaskView: View {
                         }.tint(K.Colors.text)
                     }
                 }
+            }
+        }
+        //MARK: - adding new categories
+        .alert("Add Category", isPresented: $showingAlert) {
+            TextField("Category", text: $newCategory)
+                .textInputAutocapitalization(.never)
+            Button("Add", action: addCategory)
+        }
+    }
+    
+    //MARK: - Add category
+    func addCategory(){
+        if newCategory != "" {
+            let newCat = Category()
+            newCat.title = newCategory
+            newCat.totalTime = 0
+            newCat.color.append(K.categoryBoxColors[categories.count].0)
+            newCat.color.append(K.categoryBoxColors[categories.count].1)
+            
+            $categories.append(newCat)
+            
+            category = newCategory
+            
+            newCategory = ""
+        }
+        
+    }
+}
+
+struct FormHiddenBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content.scrollContentBackground(.hidden)
+        } else {
+            content.onAppear {
+                UITableView.appearance().backgroundColor = .clear
+            }
+            .onDisappear {
+                UITableView.appearance().backgroundColor = .systemGroupedBackground
             }
         }
     }
