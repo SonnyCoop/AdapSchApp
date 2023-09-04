@@ -17,5 +17,8 @@ struct SelectionButton: ButtonStyle {
             .cornerRadius(25)
             .overlay(RoundedRectangle(cornerRadius: 25).stroke(K.Colors.background2, lineWidth: 2))
     }
+    func selecting() {
+        isSelected = !isSelected
+    }
 }
 

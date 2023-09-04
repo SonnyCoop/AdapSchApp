@@ -13,10 +13,13 @@ struct AddTaskView: View {
     @State private var title: String = ""
     @State private var hours: Int = 0
     @State private var minutes: Int = 0
+    @State private var selectedScreen = "daily"
     
     @ObservedResults(Task.self) var tasks
     
     @Environment(\.dismiss) private var dismiss
+    
+    private let screens = ["daily", "weekly", "downtime"]
     
     var body: some View {
         NavigationView{
@@ -26,20 +29,18 @@ struct AddTaskView: View {
                 //the 'form'
                 VStack{
                     HStack{
-                        Button("Individual \n Task"){
-                            //go to individual task section
-                        }.buttonStyle(SelectionButton(isSelected: true))
-                        .multilineTextAlignment(.center)
-                        
-                        Button("Weekly \n Task"){
-                            //go to individual task section
-                        }.buttonStyle(SelectionButton(isSelected: false))
-                        .multilineTextAlignment(.center)
-                        
-                        Button("Downtime \n Task"){
-                            //go to individual task section
-                        }.buttonStyle(SelectionButton(isSelected: false))
-                        .multilineTextAlignment(.center)
+                        ForEach(screens, id: \.self){ screen in
+                            Text(screen)
+                                .padding()
+                                .background(selectedScreen == screen ? K.Colors.tab : K.Colors.background1)
+                                .foregroundStyle(K.Colors.text)
+                                .cornerRadius(25)
+                                .overlay(RoundedRectangle(cornerRadius: 25).stroke(K.Colors.background2, lineWidth: 2))
+                                .onTapGesture {
+                                    selectedScreen = screen
+                                }
+                            
+                        }
                     }
                     HStack{
                         Text("Title:")
