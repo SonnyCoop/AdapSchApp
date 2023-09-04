@@ -26,6 +26,22 @@ struct AddTaskView: View {
                 //the 'form'
                 VStack{
                     HStack{
+                        Button("Individual \n Task"){
+                            //go to individual task section
+                        }.buttonStyle(SelectionButton(isSelected: true))
+                        .multilineTextAlignment(.center)
+                        
+                        Button("Weekly \n Task"){
+                            //go to individual task section
+                        }.buttonStyle(SelectionButton(isSelected: false))
+                        .multilineTextAlignment(.center)
+                        
+                        Button("Downtime \n Task"){
+                            //go to individual task section
+                        }.buttonStyle(SelectionButton(isSelected: false))
+                        .multilineTextAlignment(.center)
+                    }
+                    HStack{
                         Text("Title:")
                         TextField("Enter title", text: $title)
                     }
@@ -47,7 +63,7 @@ struct AddTaskView: View {
                         }.pickerStyle(.wheel)
                         Text("mins")
                     }
-                    
+                    Spacer()
                     Button("Add") {
                         //add to database
                         print("Title: \($title), Time: \($hours)hr \($minutes)mins")
@@ -66,7 +82,14 @@ struct AddTaskView: View {
 
                     
                 }
-                .navigationTitle("New Item")
+                .toolbar {
+                    ToolbarItem() {
+                        Button("Cancel") {
+                            //edit code here
+                            dismiss()
+                        }.tint(K.Colors.text)
+                    }
+                }
             }
         }
     }
