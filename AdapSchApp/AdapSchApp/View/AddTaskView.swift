@@ -13,6 +13,7 @@ struct AddTaskView: View {
     @State private var title: String = ""
     @State private var hours: Int = 0
     @State private var minutes: Int = 0
+    @State private var date = Date()
     @State private var selectedScreen = "daily"
     @State private var showingAlert = false
     @State private var category = "No Category"
@@ -72,12 +73,11 @@ struct AddTaskView: View {
                                 Picker("Category:", selection: $category){
                                     Text("No Category")
                                         .tag("No Category")
-                                    ForEach(categories){
-                                        cat in
-                                        Text("\(cat.title)")
-                                            .tag(cat.title)
-                                            .foregroundColor(K.Colors.text)
-                                    }
+//                                    ForEach(categories){ //line giving issues in view mode
+//                                        cat in
+//                                        Text("\(cat.title)")
+//                                            .tag(cat.title)
+//                                    }
                                     Text("Add Category +")
                                         .tag("add category")
                                 }.onChange(of: category, perform: { newValue in
@@ -107,13 +107,15 @@ struct AddTaskView: View {
                                     Text("mins")
                                 }
                             }
-//                            Button("Advanced"){
-//
-//                            }
-                            
+                            VStack{
+                                DatePicker("Due Date", selection: $date,
+                                           displayedComponents: [.date])
+                            }
+
+
                         }.modifier(FormHiddenBackground())
                         .foregroundColor(K.Colors.text)
-                        
+
                     }
                     //MARK: - Weekly Display
                     else if selectedScreen == "weekly"{

@@ -9,13 +9,8 @@ import Foundation
 import RealmSwift
 
 class Category: Object, Identifiable {
-    @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var title: String
+    @Persisted (primaryKey: true) var title: String
     @Persisted var totalTime: Int
     @Persisted var color: List<String>
     let tasks = List<Task>()
-    
-    override class func primaryKey() -> String? {
-        "id"
-    }
 }
