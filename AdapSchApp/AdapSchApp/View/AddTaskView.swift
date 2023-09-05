@@ -109,10 +109,8 @@ struct AddTaskView: View {
                                     Text("mins")
                                 }
                             }
-                            VStack{
-                                DatePicker("Due Date", selection: $dueDate,
-                                           displayedComponents: [.date])
-                            }
+                            DatePicker("Due Date", selection: $dueDate,
+                                       displayedComponents: [.date])
 
 
                         }.modifier(FormHiddenBackground())
@@ -144,8 +142,80 @@ struct AddTaskView: View {
                     }
                     //MARK: - Weekly Display
                     else if selectedScreen == "weekly"{
-                        Text("Weekly stuff")
+                        Form{
+                            HStack{
+                                Text("Title:")
+                                TextField("Enter title", text: $title)
+                                    .foregroundColor(K.Colors.text)
+                                    .textInputAutocapitalization(.words)
+                            }
+                            //category picker
+                            HStack{
+                                Picker("Category:", selection: $category){
+                                    Text("No Category")
+                                        .tag("No Category")
+                                    ForEach(categories){ //line giving issues in view mode
+                                        cat in
+                                        Text("\(cat.title)")
+                                            .tag(cat.title)
+                                    }
+                                    Text("Add Category +")
+                                        .tag("add category")
+                                }.onChange(of: category, perform: { newValue in
+                                    if newValue == "add category"{
+                                        showingAlert = true
+                                    }
+                                })
+                            }
+                            VStack{
+                                Text("Weekly Time")
+                                HStack{
+                                    Picker("Weekly Time", selection: $hours){
+                                        ForEach(0...30, id:\.self){
+                                            number in
+                                            Text("\(number)")
+                                                .foregroundColor(K.Colors.text)
+                                        }
+                                    }.pickerStyle(.wheel)
+                                    Text("hours")
+                                    Picker("Weekly Time", selection: $minutes){
+                                        ForEach((0...11).map {$0 * 5}, id:\.self){
+                                            number in
+                                            Text("\(number)")
+                                                .foregroundColor(K.Colors.text)
+                                        }
+                                    }.pickerStyle(.wheel)
+                                    Text("mins")
+                                }
+                            }
+
+                        }.modifier(FormHiddenBackground())
+                        .foregroundColor(K.Colors.text)
+                        .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)})
+
                         Spacer()
+                        Button("Add") {
+                            //creating task record
+                            let task = Task()
+                            task.title = title
+                            task.time = hours * 60 + minutes
+                            task.dueDate = Date.today().next(.monday)
+                            task.weekTask = true
+                            let selectCat = realm.object(ofType: Category.self, forPrimaryKey: category)
+                            
+                            //add to database
+                            do{
+                                try realm.write {
+                                    selectCat?.tasks.append(task)
+                                }
+                            }catch{
+                                print("error updating data, \(error)")
+                            }
+                            
+                            //closes window
+                            dismiss()
+                        }
+                        .buttonStyle(CustomButton())
                     }
                     //MARK: - Downtime Display
                     else{
@@ -207,6 +277,74 @@ struct FormHiddenBackground: ViewModifier {
             }
             .onDisappear {
                 UITableView.appearance().backgroundColor = .systemGroupedBackground
+            }
+        }
+    }
+}
+
+//MARK: - Date Extension Methods
+extension Date {
+    static func today() -> Date {
+        return Date()
+    }
+    
+    func next(_ weekday: Weekday, considerToday: Bool = false) -> Date {
+        return get(.next,
+                   weekday,
+                   considerToday: considerToday)
+    }
+    
+    func get(_ direction: SearchDirection,
+               _ weekDay: Weekday,
+               considerToday consider: Bool = false) -> Date {
+
+        let dayName = weekDay.rawValue
+
+        let weekdaysName = getWeekDaysInEnglish().map { $0.lowercased() }
+
+        assert(weekdaysName.contains(dayName), "weekday symbol should be in form \(weekdaysName)")
+
+        let searchWeekdayIndex = weekdaysName.firstIndex(of: dayName)! + 1
+
+        let calendar = Calendar(identifier: .gregorian)
+
+        if consider && calendar.component(.weekday, from: self) == searchWeekdayIndex {
+            return self
+        }
+
+        var nextDateComponent = calendar.dateComponents([.hour, .minute, .second], from: self)
+        nextDateComponent.weekday = searchWeekdayIndex
+
+        let date = calendar.nextDate(after: self,
+                                     matching: nextDateComponent,
+                                     matchingPolicy: .nextTime,
+                                     direction: direction.calendarSearchDirection)
+
+        return date!
+      }
+}
+
+//MARK: - Date Helper Methods
+extension Date {
+    func getWeekDaysInEnglish() -> [String] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: "en_US_POSIX")
+        return calendar.weekdaySymbols
+    }
+    
+    enum Weekday: String {
+        case monday, tuesday, wednesday, thursday, friday, saturday, sunday
+    }
+    enum SearchDirection {
+        case next
+        case previous
+
+        var calendarSearchDirection: Calendar.SearchDirection {
+            switch self {
+                case .next:
+                return .forward
+                case .previous:
+                return .backward
             }
         }
     }
