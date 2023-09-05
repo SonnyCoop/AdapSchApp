@@ -13,13 +13,14 @@ struct AddTaskView: View {
     @State private var title: String = ""
     @State private var hours: Int = 0
     @State private var minutes: Int = 0
-    @State private var date = Date()
+    @State private var dueDate = Date()
     @State private var selectedScreen = "daily"
     @State private var showingAlert = false
     @State private var category = "No Category"
     @State private var newCategory = ""
 
     //setting up realm
+    let realm = try! Realm()
     @ObservedResults(Category.self) var categories
     @ObservedResults(Task.self) var tasks
     
@@ -73,11 +74,11 @@ struct AddTaskView: View {
                                 Picker("Category:", selection: $category){
                                     Text("No Category")
                                         .tag("No Category")
-//                                    ForEach(categories){ //line giving issues in view mode
-//                                        cat in
-//                                        Text("\(cat.title)")
-//                                            .tag(cat.title)
-//                                    }
+                                    ForEach(categories){ //line giving issues in view mode
+                                        cat in
+                                        Text("\(cat.title)")
+                                            .tag(cat.title)
+                                    }
                                     Text("Add Category +")
                                         .tag("add category")
                                 }.onChange(of: category, perform: { newValue in
@@ -108,42 +109,52 @@ struct AddTaskView: View {
                                 }
                             }
                             VStack{
-                                DatePicker("Due Date", selection: $date,
+                                DatePicker("Due Date", selection: $dueDate,
                                            displayedComponents: [.date])
                             }
 
 
                         }.modifier(FormHiddenBackground())
                         .foregroundColor(K.Colors.text)
+                        .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)})
 
+                        Spacer()
+                        Button("Add") {
+                            //creating task record
+                            let task = Task()
+                            task.title = title
+                            task.time = hours * 60 + minutes
+                            task.dueDate = dueDate
+                            let selectCat = realm.object(ofType: Category.self, forPrimaryKey: category)
+//                            $tasks.append(task)
+                            do{
+                                try realm.write {
+                                    selectCat?.tasks.append(task)
+                                }
+                            }catch{
+                                print("error updating data, \(error)")
+                            }
+                            
+                            
+                            
+                            //adding to database
+                            
+                            
+                            //closes window
+                            dismiss()
+                        }
+                        .buttonStyle(CustomButton())
                     }
                     //MARK: - Weekly Display
                     else if selectedScreen == "weekly"{
                         Text("Weekly stuff")
+                        Spacer()
                     }
                     //MARK: - Downtime Display
                     else{
                         Text("Downtime stuff")
+                        Spacer()
                     }
-                    
-                    Spacer()
-                    Button("Add") {
-                        //add to database
-                        print("Title: \($title), Time: \($hours)hr \($minutes)mins")
-                        
-                        //creating task record
-                        let task = Task()
-                        task.title = title
-                        task.time = hours * 60 + minutes
-                        
-                        $tasks.append(task)
-                        
-                        //closes window
-                        dismiss()
-                    }
-                    .buttonStyle(CustomButton())
-
-                    
                 }
                 .toolbar {
                     ToolbarItem() {

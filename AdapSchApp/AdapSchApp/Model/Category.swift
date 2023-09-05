@@ -12,5 +12,5 @@ class Category: Object, Identifiable {
     @Persisted (primaryKey: true) var title: String
     @Persisted var totalTime: Int
     @Persisted var color: List<String>
-    let tasks = List<Task>()
+    @Persisted var tasks: List<Task>
 }
