@@ -68,6 +68,7 @@ struct AddTaskView: View {
                                 Text("Title:")
                                 TextField("Enter title", text: $title)
                                     .foregroundColor(K.Colors.text)
+                                    .textInputAutocapitalization(.words)
                             }
                             //category picker
                             HStack{
@@ -126,7 +127,8 @@ struct AddTaskView: View {
                             task.time = hours * 60 + minutes
                             task.dueDate = dueDate
                             let selectCat = realm.object(ofType: Category.self, forPrimaryKey: category)
-//                            $tasks.append(task)
+                            
+                            //add to database
                             do{
                                 try realm.write {
                                     selectCat?.tasks.append(task)
@@ -134,11 +136,6 @@ struct AddTaskView: View {
                             }catch{
                                 print("error updating data, \(error)")
                             }
-                            
-                            
-                            
-                            //adding to database
-                            
                             
                             //closes window
                             dismiss()
@@ -169,14 +166,20 @@ struct AddTaskView: View {
         //MARK: - adding new categories
         .alert("Add Category", isPresented: $showingAlert) {
             TextField("Category", text: $newCategory)
-                .textInputAutocapitalization(.never)
-            Button("Add", action: addCategory)
+                .textInputAutocapitalization(.words)
+            HStack{
+                Button("Cancel", action: {
+                    category = "No Category"
+                    showingAlert = false})
+                Button("Add", action: addCategory)
+            }
         }
     }
     
     //MARK: - Add category
     func addCategory(){
-        if newCategory != "" {
+        let versionPresent = realm.object(ofType: Category.self, forPrimaryKey: newCategory)
+        if newCategory != "" && versionPresent == nil{
             let newCat = Category()
             newCat.title = newCategory
             newCat.totalTime = 0
@@ -186,10 +189,11 @@ struct AddTaskView: View {
             $categories.append(newCat)
             
             category = newCategory
-            
-            newCategory = ""
         }
-        
+        else{
+            category = "No Category"
+        }
+        newCategory = ""
     }
 }
 
