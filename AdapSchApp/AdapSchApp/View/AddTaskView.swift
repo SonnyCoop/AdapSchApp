@@ -41,6 +41,17 @@ struct AddTaskView: View {
     
     private let screens = ["daily", "weekly", "downtime"]
     
+    init(){
+        let noCategoryPresent = realm.object(ofType: Category.self, forPrimaryKey: "No Category")
+        if noCategoryPresent == nil {
+            let noCat = Category()
+            noCat.title = "No Category"
+            noCat.color.append(K.categoryBoxColors[categories.count].0)
+            noCat.color.append(K.categoryBoxColors[categories.count].1)
+            $categories.append(noCat)
+        }
+    }
+    
     var body: some View {
         NavigationView{
             ZStack{
@@ -87,8 +98,6 @@ struct AddTaskView: View {
                                 }
                                 //category picker
                                 Picker("Category:", selection: $category){
-                                    Text("No Category")
-                                        .tag("No Category")
                                     ForEach(categories){ //line giving issues in view mode
                                         cat in
                                         Text("\(cat.title)")
@@ -352,7 +361,6 @@ struct AddTaskView: View {
         if newCategory != "" && versionPresent == nil{
             let newCat = Category()
             newCat.title = newCategory
-            newCat.totalTime = 0
             newCat.color.append(K.categoryBoxColors[categories.count].0)
             newCat.color.append(K.categoryBoxColors[categories.count].1)
             
@@ -365,6 +373,8 @@ struct AddTaskView: View {
         }
         newCategory = ""
     }
+    
+    //MARK: - Add Task
     
     func addTask(){
         if selectedScreen != "downtime"{
