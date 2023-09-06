@@ -10,9 +10,9 @@ import RealmSwift
 
 class Downtime: Object, Identifiable {
     @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var days: String
-    @Persisted var start: String
-    @Persisted var end: String
+    @Persisted var days: List<String>
+    @Persisted var start: Date
+    @Persisted var end: Date
     
     override class func primaryKey() -> String? {
         "id"

@@ -13,18 +13,20 @@ struct AddTaskView: View {
     @State private var title: String = ""
     @State private var hours: Int = 0
     @State private var minutes: Int = 0
-    @State private var hoursEnd: Int = 0
-    @State private var minutesEnd: Int = 0
+    @State private var startTime = Date()
+    @State private var endTime = Date()
     @State private var dueDate = Date()
     @State private var selectedScreen = "daily"
     @State private var showingAlert = false
     @State private var category = "No Category"
     @State private var newCategory = ""
+    private var dayPicker = DayPicker()
 
     //setting up realm
     let realm = try! Realm()
     @ObservedResults(Category.self) var categories
     @ObservedResults(Task.self) var tasks
+    @ObservedResults(Downtime.self) var downtimes
     
     @Environment(\.dismiss) private var dismiss
     
@@ -167,44 +169,10 @@ struct AddTaskView: View {
                         }
                         //MARK: - Downtime Display
                         else{
-                            VStack{
-                                Text("Start")
-                                HStack{
-                                    Picker("Start", selection: $hours){
-                                        ForEach(0...30, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                    Text(":")
-                                    Picker("Start", selection: $minutes){
-                                        ForEach((0...11).map {$0 * 5}, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                }
-                                Text("End")
-                                HStack{
-                                    Picker("End", selection: $hoursEnd){
-                                        ForEach(0...30, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                    Text(":")
-                                    Picker("End", selection: $minutesEnd){
-                                        ForEach((0...11).map {$0 * 5}, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                }
-                            }
+                            dayPicker
+                            DatePicker("Start:", selection: $startTime, displayedComponents: .hourAndMinute)
+                            
+                            DatePicker("End:", selection: $endTime, displayedComponents: .hourAndMinute)
                         }
                     }.modifier(FormHiddenBackground())
                     .foregroundColor(K.Colors.text)
@@ -283,6 +251,14 @@ struct AddTaskView: View {
             }catch{
                 print("error updating data, \(error)")
             }
+        }
+        else {
+            let downtime = Downtime()
+            downtime.days = List<String>()
+            downtime.days.append(objectsIn: dayPicker.getDays())
+            downtime.start = startTime
+            downtime.end = endTime
+            $downtimes.append(downtime)
         }
         
         //closing window
