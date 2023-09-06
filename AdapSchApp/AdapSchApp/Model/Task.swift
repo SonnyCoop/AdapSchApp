@@ -14,7 +14,7 @@ class Task: Object, Identifiable {
     @Persisted var time: Int
     @Persisted var dueDate: Date
     @Persisted var blockLenghts: Int = 60
-    @Persisted var priority: Int = 5
+    @Persisted var priority: Int = 3
     @Persisted var timeOfDay: String = "Any"
     @Persisted var weekTask: Bool = false
     @Persisted(originProperty: "tasks") var parentCategory: LinkingObjects<Category>

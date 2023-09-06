@@ -10,7 +10,7 @@ import RealmSwift
 
 class Category: Object, Identifiable {
     @Persisted (primaryKey: true) var title: String
-    @Persisted var totalTime: Int
+    @Persisted var totalTime: Int = 0
     @Persisted var color: List<String>
     @Persisted var tasks: List<Task>
 }
