@@ -16,10 +16,19 @@ struct AddTaskView: View {
     @State private var startTime = Date()
     @State private var endTime = Date()
     @State private var dueDate = Date()
+    @State private var blockHours = 1
+    @State private var blockMins = 0
+    @State private var priority = 3.0
+    @State private var timeOfDay = "Any"
+    
+    //changing views
     @State private var selectedScreen = "daily"
     @State private var showingAlert = false
     @State private var category = "No Category"
     @State private var newCategory = ""
+    @State private var advanced = false
+    
+    //day picker object
     private var dayPicker = DayPicker()
 
     //setting up realm
@@ -67,16 +76,16 @@ struct AddTaskView: View {
                     }.frame(maxHeight: 80)
                     
                     Form{
-                        //MARK: - Daily display
-                        if selectedScreen == "daily"{
-                            HStack{
-                                Text("Title:")
-                                TextField("Enter title", text: $title)
-                                    .foregroundColor(K.Colors.text)
-                                    .textInputAutocapitalization(.words)
-                            }
-                            //category picker
-                            HStack{
+                        Section{
+                            //MARK: - Daily display
+                            if selectedScreen == "daily"{
+                                HStack{
+                                    Text("Title:")
+                                    TextField("Enter title", text: $title)
+//                                        .foregroundColor(K.Colors.text)
+                                        .textInputAutocapitalization(.words)
+                                }
+                                //category picker
                                 Picker("Category:", selection: $category){
                                     Text("No Category")
                                         .tag("No Category")
@@ -92,88 +101,217 @@ struct AddTaskView: View {
                                         showingAlert = true
                                     }
                                 })
-                            }
-                            VStack{
-                                Text("Estimated Time")
-                                HStack{
-                                    Picker("Estimated Time", selection: $hours){
-                                        ForEach(0...30, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                    Text("hours")
-                                    Picker("Estimated Time", selection: $minutes){
-                                        ForEach((0...11).map {$0 * 5}, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                    Text("mins")
-                                }
-                            }
-                            DatePicker("Due Date", selection: $dueDate,
-                                       displayedComponents: [.date])
-                        }
-                        
-                        
-                        //MARK: - Weekly Display
-                        else if selectedScreen == "weekly"{
-                            HStack{
-                                Text("Title:")
-                                TextField("Enter title", text: $title)
-                                    .foregroundColor(K.Colors.text)
-                                    .textInputAutocapitalization(.words)
-                            }
-                            //category picker
-                            HStack{
-                                Picker("Category:", selection: $category){
-                                    Text("No Category")
-                                        .tag("No Category")
-                                    ForEach(categories){ //line giving issues in view mode
-                                        cat in
-                                        Text("\(cat.title)")
-                                            .tag(cat.title)
+                                VStack{
+                                    Text("Estimated Time")
+                                    HStack{
+                                        Picker("", selection: $hours){
+                                            ForEach(0...30, id:\.self){
+                                                number in
+                                                Text("\(number)")
+                                                    .foregroundColor(K.Colors.text)
+                                            }
+                                        }.pickerStyle(.wheel)
+                                        Text("hours")
+                                        Picker("", selection: $minutes){
+                                            ForEach((0...11).map {$0 * 5}, id:\.self){
+                                                number in
+                                                Text("\(number)")
+                                                    .foregroundColor(K.Colors.text)
+                                            }
+                                        }.pickerStyle(.wheel)
+                                        Text("mins")
                                     }
-                                    Text("Add Category +")
-                                        .tag("add category")
-                                }.onChange(of: category, perform: { newValue in
-                                    if newValue == "add category"{
-                                        showingAlert = true
-                                    }
-                                })
-                            }
-                            VStack{
-                                Text("Weekly Time")
-                                HStack{
-                                    Picker("Weekly Time", selection: $hours){
-                                        ForEach(0...30, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                    Text("hours")
-                                    Picker("Weekly Time", selection: $minutes){
-                                        ForEach((0...11).map {$0 * 5}, id:\.self){
-                                            number in
-                                            Text("\(number)")
-                                                .foregroundColor(K.Colors.text)
-                                        }
-                                    }.pickerStyle(.wheel)
-                                    Text("mins")
                                 }
+                                DatePicker("Due Date", selection: $dueDate,
+                                           displayedComponents: [.date])
+                                
+                                //MARK: - Advanced Individual Task
+                                if advanced{
+                                    HStack {
+                                        Text("Priority: ")
+                                        Slider(value: $priority,
+                                               in: 1...5, step: 1.0)
+                                        Text("\(Int(priority))")
+                                    }
+                                    VStack{
+                                        Text("Block Lengths")
+                                        HStack{
+                                            Picker("", selection: $blockHours){
+                                                ForEach(0...15, id:\.self){
+                                                    number in
+                                                    Text("\(number)")
+                                                        .foregroundColor(K.Colors.text)
+                                                }
+                                            }.pickerStyle(.wheel)
+                                            Text("hours")
+                                            Picker("", selection: $blockMins){
+                                                ForEach((0...11).map {$0 * 5}, id:\.self){
+                                                    number in
+                                                    Text("\(number)")
+                                                        .foregroundColor(K.Colors.text)
+                                                }
+                                            }.pickerStyle(.wheel)
+                                            Text("mins")
+                                        }
+                                    }
+                                    Picker("Time Of Day:", selection: $timeOfDay){
+                                        Text("Any")
+                                            .tag("Any")
+                                        Text("Morning")
+                                            .tag("Morning")
+                                        Text("Afternoon")
+                                            .tag("Afternoon")
+                                        Text("Night")
+                                            .tag("Night")
+                                    }
+                                    
+                                    Button{
+                                        //basic options
+                                        advanced = false
+                                    } label: {
+                                        HStack{
+                                            Text("Basic")
+                                                .tint(K.Colors.text)
+                                            Text(Image(systemName: "chevron.up"))
+                                                .tint(K.Colors.text)
+                                        }
+                                    }.buttonStyle(AdvancedButton())
+                                    
+                                }else{
+                                    Button{
+                                        //advanced options
+                                        advanced = true
+                                    } label: {
+                                        HStack{
+                                            Text("Advanced")
+                                                .tint(K.Colors.text)
+                                            Text(Image(systemName: "chevron.down"))
+                                                .tint(K.Colors.text)
+                                        }
+                                    }.buttonStyle(AdvancedButton())
+                                }
+                                
+                                
                             }
-                        }
-                        //MARK: - Downtime Display
-                        else{
-                            dayPicker
-                            DatePicker("Start:", selection: $startTime, displayedComponents: .hourAndMinute)
                             
-                            DatePicker("End:", selection: $endTime, displayedComponents: .hourAndMinute)
+                            
+                            //MARK: - Weekly Display
+                            else if selectedScreen == "weekly"{
+                                HStack{
+                                    Text("Title:")
+                                    TextField("Enter title", text: $title)
+                                        .foregroundColor(K.Colors.text)
+                                        .textInputAutocapitalization(.words)
+                                }
+                                //category picker
+                                HStack{
+                                    Picker("Category:", selection: $category){
+                                        Text("No Category")
+                                            .tag("No Category")
+                                        ForEach(categories){ //line giving issues in view mode
+                                            cat in
+                                            Text("\(cat.title)")
+                                                .tag(cat.title)
+                                        }
+                                        Text("Add Category +")
+                                            .tag("add category")
+                                    }.onChange(of: category, perform: { newValue in
+                                        if newValue == "add category"{
+                                            showingAlert = true
+                                        }
+                                    })
+                                }
+                                VStack{
+                                    Text("Weekly Time")
+                                    HStack{
+                                        Picker("Weekly Time", selection: $hours){
+                                            ForEach(0...30, id:\.self){
+                                                number in
+                                                Text("\(number)")
+                                                    .foregroundColor(K.Colors.text)
+                                            }
+                                        }.pickerStyle(.wheel)
+                                        Text("hours")
+                                        Picker("Weekly Time", selection: $minutes){
+                                            ForEach((0...11).map {$0 * 5}, id:\.self){
+                                                number in
+                                                Text("\(number)")
+                                                    .foregroundColor(K.Colors.text)
+                                            }
+                                        }.pickerStyle(.wheel)
+                                        Text("mins")
+                                    }
+                                }
+                                
+                                //MARK: - Advanced Weekly Task
+                                if advanced{
+                                    VStack{
+                                        Text("Block Lengths")
+                                        HStack{
+                                            Picker("", selection: $blockHours){
+                                                ForEach(0...15, id:\.self){
+                                                    number in
+                                                    Text("\(number)")
+                                                        .foregroundColor(K.Colors.text)
+                                                }
+                                            }.pickerStyle(.wheel)
+                                            Text("hours")
+                                            Picker("", selection: $blockMins){
+                                                ForEach((0...11).map {$0 * 5}, id:\.self){
+                                                    number in
+                                                    Text("\(number)")
+                                                        .foregroundColor(K.Colors.text)
+                                                }
+                                            }.pickerStyle(.wheel)
+                                            Text("mins")
+                                        }
+                                    }
+                                    Picker("Time Of Day:", selection: $timeOfDay){
+                                        Text("Any")
+                                            .tag("Any")
+                                        Text("Morning")
+                                            .tag("Morning")
+                                        Text("Afternoon")
+                                            .tag("Afternoon")
+                                        Text("Night")
+                                            .tag("Night")
+                                    }
+                                    
+                                    Button{
+                                        //basic options
+                                        advanced = false
+                                    } label: {
+                                        HStack{
+                                            Text("Basic")
+                                                .tint(K.Colors.text)
+                                            Text(Image(systemName: "chevron.up"))
+                                                .tint(K.Colors.text)
+                                        }
+                                    }.buttonStyle(AdvancedButton())
+                                    
+                                }else{
+                                    Button{
+                                        //advanced options
+                                        advanced = true
+                                    } label: {
+                                        HStack{
+                                            Text("Advanced")
+                                                .tint(K.Colors.text)
+                                            Text(Image(systemName: "chevron.down"))
+                                                .tint(K.Colors.text)
+                                        }
+                                    }.buttonStyle(AdvancedButton())
+                                }
+                            }
+                            //MARK: - Downtime Display
+                            else{
+                                dayPicker
+                                DatePicker("Start:", selection: $startTime, displayedComponents: .hourAndMinute)
+                                
+                                DatePicker("End:", selection: $endTime, displayedComponents: .hourAndMinute)
+                            }
                         }
+                        .listRowBackground(K.Colors.background1)
                     }.modifier(FormHiddenBackground())
                     .foregroundColor(K.Colors.text)
                     .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)})
@@ -192,6 +330,7 @@ struct AddTaskView: View {
                         }.tint(K.Colors.text)
                     }
                 }
+                    
             }
         }
         //MARK: - adding new categories
@@ -239,7 +378,10 @@ struct AddTaskView: View {
             }
             else{
                 task.dueDate = dueDate
+                task.priority = Int(priority)
             }
+            task.blockLenghts = blockHours * 60 + blockMins
+            task.timeOfDay = timeOfDay
             
             let selectCat = realm.object(ofType: Category.self, forPrimaryKey: category)
             

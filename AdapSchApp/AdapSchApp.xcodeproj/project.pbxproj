@@ -11,12 +11,12 @@
 		300D80D02AA5129A0014B284 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D80CF2AA5129A0014B284 /* Task.swift */; };
 		300D80D32AA513830014B284 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 300D80D22AA513830014B284 /* Realm */; };
 		300D80D52AA513830014B284 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 300D80D42AA513830014B284 /* RealmSwift */; };
-		300D80D82AA5B6420014B284 /* SelectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D80D72AA5B6420014B284 /* SelectionButton.swift */; };
 		300D80DB2AA60FF60014B284 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D80DA2AA60FF60014B284 /* Category.swift */; };
 		301AD5982AA70870006DA899 /* Downtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301AD5972AA70870006DA899 /* Downtime.swift */; };
 		302AB15C2AA7C86D0061D11A /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB15B2AA7C86D0061D11A /* DateExtensions.swift */; };
 		302AB15E2AA7C8F70061D11A /* FormHiddenBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB15D2AA7C8F70061D11A /* FormHiddenBackground.swift */; };
 		302AB1602AA875E20061D11A /* DayPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB15F2AA875E20061D11A /* DayPicker.swift */; };
+		302AB1622AA9033E0061D11A /* AdvancedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB1612AA9033E0061D11A /* AdvancedButton.swift */; };
 		30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */; };
 		30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* CalendarView.swift */; };
 		30D38C752AA4A31F00509C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C742AA4A31F00509C21 /* Assets.xcassets */; };
@@ -32,12 +32,12 @@
 /* Begin PBXFileReference section */
 		300D80CC2AA4F1B00014B284 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		300D80CF2AA5129A0014B284 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
-		300D80D72AA5B6420014B284 /* SelectionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionButton.swift; sourceTree = "<group>"; };
 		300D80DA2AA60FF60014B284 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		301AD5972AA70870006DA899 /* Downtime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downtime.swift; sourceTree = "<group>"; };
 		302AB15B2AA7C86D0061D11A /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		302AB15D2AA7C8F70061D11A /* FormHiddenBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormHiddenBackground.swift; sourceTree = "<group>"; };
 		302AB15F2AA875E20061D11A /* DayPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPicker.swift; sourceTree = "<group>"; };
+		302AB1612AA9033E0061D11A /* AdvancedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedButton.swift; sourceTree = "<group>"; };
 		30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdapSchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapSchAppApp.swift; sourceTree = "<group>"; };
 		30D38C722AA4A31E00509C21 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -79,9 +79,9 @@
 			isa = PBXGroup;
 			children = (
 				300D80CC2AA4F1B00014B284 /* CustomButton.swift */,
-				300D80D72AA5B6420014B284 /* SelectionButton.swift */,
 				302AB15D2AA7C8F70061D11A /* FormHiddenBackground.swift */,
 				302AB15F2AA875E20061D11A /* DayPicker.swift */,
+				302AB1612AA9033E0061D11A /* AdvancedButton.swift */,
 			);
 			path = CustomElements;
 			sourceTree = "<group>";
@@ -223,6 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30D38C882AA4D97400509C21 /* DarkModeSettings.swift in Sources */,
+				302AB1622AA9033E0061D11A /* AdvancedButton.swift in Sources */,
 				30D38C842AA4A7C100509C21 /* SettingsView.swift in Sources */,
 				302AB15E2AA7C8F70061D11A /* FormHiddenBackground.swift in Sources */,
 				300D80D02AA5129A0014B284 /* Task.swift in Sources */,
@@ -235,7 +236,6 @@
 				301AD5982AA70870006DA899 /* Downtime.swift in Sources */,
 				30D38C862AA4AD7700509C21 /* K.swift in Sources */,
 				30D38C802AA4A64300509C21 /* ContentView.swift in Sources */,
-				300D80D82AA5B6420014B284 /* SelectionButton.swift in Sources */,
 				30D38C822AA4A78500509C21 /* TaskView.swift in Sources */,
 				300D80DB2AA60FF60014B284 /* Category.swift in Sources */,
 			);
