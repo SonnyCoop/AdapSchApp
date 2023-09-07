@@ -34,7 +34,7 @@ struct AddTaskView: View {
     //setting up realm
     let realm = try! Realm()
     @ObservedResults(Category.self) var categories
-    @ObservedResults(Task.self) var tasks
+//    @ObservedResults(Task.self) var tasks
     @ObservedResults(Downtime.self) var downtimes
     
     @Environment(\.dismiss) private var dismiss

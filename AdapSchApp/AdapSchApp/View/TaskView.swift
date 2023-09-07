@@ -6,18 +6,33 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct TaskView: View {
     //when true add screen is shown
     @State private var isPresented: Bool = false
+    
+    @ObservedResults(Category.self) var categories
     
     var body: some View {
         NavigationView{
             ZStack{
                 //setting background colour
                 K.Colors.background1.ignoresSafeArea()
-                
-                Text("Tasks")
+                VStack{
+                    ForEach(categories, id: \.self) { category in
+                        ForEach(category.tasks, id: \.self){ task in
+                            HStack{
+                                VStack{
+                                    Text(task.title)
+                                    Text("\(task.dueDate)")
+                                }
+                                Text("\(task.time)")
+                            }
+                            .modifier(TaskTextBox(background: Array(category.color)))
+                        }
+                    }
+                }
                 
                 //MARK: - Navigation Tab Setup
                     .toolbarBackground(K.Colors.tab, for: .navigationBar)
