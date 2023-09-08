@@ -12,6 +12,7 @@ struct TaskView: View {
     //when true add screen is shown
     @State private var isPresented: Bool = false
     
+    let realm = try! Realm()
     @ObservedResults(Category.self) var categories
     
     var body: some View {
@@ -22,14 +23,17 @@ struct TaskView: View {
                 VStack{
                     ForEach(categories, id: \.self) { category in
                         ForEach(category.tasks, id: \.self){ task in
-                            HStack{
-                                VStack{
-                                    Text(task.title)
-                                    Text("\(task.dueDate)")
+                            TaskItemCell(background: Array(category.color), task: task)
+                        }
+                        .onDelete { task in
+                            do{
+                                category.tasks.remove(atOffsets: task)
+                                try self.realm.write{
+                                    realm.delete(category.tasks[task.first!])
                                 }
-                                Text("\(task.time)")
+                            }catch{
+                                print("error deleting item, \(error)")
                             }
-                            .modifier(TaskTextBox(background: Array(category.color)))
                         }
                     }
                 }

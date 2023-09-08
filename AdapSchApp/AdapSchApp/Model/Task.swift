@@ -11,6 +11,7 @@ import RealmSwift
 class Task: Object, Identifiable {
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var title: String
+    @Persisted var timeDone: Int = 0
     @Persisted var time: Int
     @Persisted var dueDate: Date
     @Persisted var blockLenghts: Int = 60
