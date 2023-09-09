@@ -11,9 +11,17 @@ import RealmSwift
 struct TaskView: View {
     //when true add screen is shown
     @State private var isPresented: Bool = false
+//    @State private var taskArray: Results<Task>
     
     let realm = try! Realm()
-    @ObservedResults(Category.self) var categories
+    @ObservedResults(Task.self) var tasks
+    
+//    init(){
+//        for category in categories {
+////            taskArray.append(contentsOf: category.tasks)
+//            taskArray.
+//        }
+//    }
     
     var body: some View {
         NavigationView{
@@ -21,21 +29,27 @@ struct TaskView: View {
                 //setting background colour
                 K.Colors.background1.ignoresSafeArea()
                 VStack{
-                    ForEach(categories, id: \.self) { category in
-                        ForEach(category.tasks, id: \.self){ task in
-                            TaskItemCell(background: Array(category.color), task: task)
-                        }
-                        .onDelete { task in
-                            do{
-                                category.tasks.remove(atOffsets: task)
-                                try self.realm.write{
-                                    realm.delete(category.tasks[task.first!])
-                                }
-                            }catch{
-                                print("error deleting item, \(error)")
-                            }
-                        }
+                    ForEach(tasks, id: \.self) { task in
+                        TaskItemCell(task: task, background: getBackground(task: task))
                     }
+                    
+//                    ForEach(categories, id: \.self) { category in
+////                        taskList = category.tasks
+//                        ForEach(category.tasks, id: \.self){ task in
+//                            TaskItemCell(background: Array(category.color), task: task)
+//                        }
+//                        .onDelete(perform: $categories.tasks.remove(atOffsets: task))
+                        
+//                        .onDelete { task in
+//                            do{
+//                                category.tasks.remove(atOffsets: task)
+//                                try self.realm.write{
+//                                    realm.delete(category.tasks[task.first!])
+//                                }
+//                            }catch{
+//                                print("error deleting item, \(error)")
+//                            }
+//                        }
                 }
                 
                 //MARK: - Navigation Tab Setup
@@ -61,6 +75,16 @@ struct TaskView: View {
                 AddTaskView()
             })
         }
+    }
+
+    func getBackground(task: Task) -> [String]{
+        //this is causing an error
+        let category = task.parentCategory
+        if let colors = category.first?.color {
+            print(colors)
+            return Array(colors)
+        }
+        return ["#ffffff","#ffffff"]
     }
 }
 

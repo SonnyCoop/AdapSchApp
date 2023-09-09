@@ -6,14 +6,19 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct TaskItemCell: View {
-    let background: [String]
     let task: Task
+    
+    let background: [String]
+    
     
     //when true add screen is shown
     @State private var isPresented: Bool = false
     @Environment(\.colorScheme) var darkMode
+    
+    let realm = try! Realm()
     
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -33,6 +38,7 @@ struct TaskItemCell: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(darkMode == .light ? Color(UIColor(hex: background[0]) ?? .red) : Color(UIColor(hex: background[1]) ?? .red)))
         .frame(maxWidth: .infinity, maxHeight: 50)
         .padding()
+        .foregroundColor(K.Colors.text)
         
         .onTapGesture {
             isPresented = true
@@ -47,6 +53,6 @@ struct TaskItemCell: View {
 
 struct TaskItemCell_Previews: PreviewProvider {
     static var previews: some View {
-        TaskItemCell(background: ["#1123ff", "#23ffff"], task: Task())
+        TaskItemCell(task: Task(), background: ["00ff00", "38ff89"])
     }
 }
