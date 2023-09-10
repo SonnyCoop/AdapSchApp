@@ -10,11 +10,13 @@ import RealmSwift
 
 struct TimerView: View {
     let task: Task
-    
-    
+    @State var timeRemaining: Int
+
     //timer variables
     @State private var timerType: TimerType = .regular
     @State private var paused: Bool = false
+    @State private var overtime: Bool = false
+    
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     @State private var completed: Bool = false
@@ -42,10 +44,22 @@ struct TimerView: View {
                     Spacer()
                     //MARK: - Timer
                     ZStack{
-                        CircularProgressBar(progress: 0.25)
+                        CircularProgressBar(progress: !overtime ? (Double(timeRemaining) / Double(task.blockLenghts * 60)) : 0)
                             .frame(width: 200, height: 200)
                         VStack{
-                            Text("Time")
+                            Text(timeFormatter())
+                                .onReceive(timer, perform: { _ in
+                                    if overtime {
+                                        timeRemaining += 1
+                                    }
+                                    else if timeRemaining > 0 && !paused {
+                                        timeRemaining -= 1
+                                    }
+                                    else if timeRemaining == 0 && !paused {
+                                        overtime = true
+                                        timeRemaining += 1
+                                    }
+                                })
                                 .padding()
                             Button{
                                 paused = !paused
@@ -103,10 +117,33 @@ struct TimerView: View {
             }
         }
     }
+    func timeFormatter() -> String{
+        let totalHrs = timeRemaining / 3600
+        var totalSecs = timeRemaining % 3600
+        let totalMins = totalSecs / 60
+        totalSecs = totalSecs % 60
+        
+        let stringMins = totalMins / 10 == 0 ? "0\(totalMins)" : "\(totalMins)"
+        let stringSecs = totalSecs / 10 == 0 ? "0\(totalSecs)" : "\(totalSecs)"
+        
+        var timerString = ""
+        
+        if totalHrs == 0 {
+            timerString = stringMins+":"+stringSecs
+        }
+        else {
+            timerString = "\(totalHrs):"+stringMins+":"+stringSecs
+        }
+    
+        if overtime{
+            return "+ "+timerString
+        }
+        return timerString
+    }
 }
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView(task: Task())
+        TimerView(task: Task(), timeRemaining: 10)
     }
 }
