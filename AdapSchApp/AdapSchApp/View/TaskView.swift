@@ -11,46 +11,48 @@ import RealmSwift
 struct TaskView: View {
     //when true add screen is shown
     @State private var isPresented: Bool = false
-//    @State private var taskArray: Results<Task>
+    @State private var sortingChoice: SortingChoice = .dueDate
+    
+    enum SortingChoice: String, CaseIterable, Identifiable {
+        case parentCategory, dueDate, progress, completed, individualTask
+        var id: Self { self }
+    }
+    
+    var sortedTasks: [Task] {
+        switch sortingChoice {
+        case .parentCategory:
+            return tasks.sorted { ($0.parentCategory.first?.title)! < ($1.parentCategory.first?.title)!}
+        case .dueDate:
+            return tasks.sorted { $0.dueDate < $1.dueDate}
+        case .progress:
+            return tasks.sorted { $0.timeDone / $0.time > $1.timeDone / $1.time}
+        case .completed:
+            return tasks.sorted { ($0.timeDone > $0.time) && !($1.timeDone > $1.time)}
+        case .individualTask:
+            return tasks.sorted { !$0.weekTask && $1.weekTask}
+        }
+    }
     
     let realm = try! Realm()
     @ObservedResults(Task.self) var tasks
-    
-//    init(){
-//        for category in categories {
-////            taskArray.append(contentsOf: category.tasks)
-//            taskArray.
-//        }
-//    }
     
     var body: some View {
         NavigationView{
             ZStack{
                 //setting background colour
                 K.Colors.background1.ignoresSafeArea()
-                VStack{
-                    ForEach(tasks, id: \.self) { task in
-                        TaskItemCell(task: task, background: getBackground(task: task))
+                List{
+                    Section{
+                        ForEach(sortedTasks, id: \.self) { task in
+                            TaskItemCell(task: task, background: getBackground(task: task))
+                        }
+                        .onDelete(perform: $tasks.remove)
                     }
-                    
-//                    ForEach(categories, id: \.self) { category in
-////                        taskList = category.tasks
-//                        ForEach(category.tasks, id: \.self){ task in
-//                            TaskItemCell(background: Array(category.color), task: task)
-//                        }
-//                        .onDelete(perform: $categories.tasks.remove(atOffsets: task))
-                        
-//                        .onDelete { task in
-//                            do{
-//                                category.tasks.remove(atOffsets: task)
-//                                try self.realm.write{
-//                                    realm.delete(category.tasks[task.first!])
-//                                }
-//                            }catch{
-//                                print("error deleting item, \(error)")
-//                            }
-//                        }
+                    .listRowBackground(K.Colors.background1)
+                    .listRowSeparator(.hidden)
                 }
+                .modifier(FormHiddenBackground())
+                .listStyle(.plain)
                 
                 //MARK: - Navigation Tab Setup
                     .toolbarBackground(K.Colors.tab, for: .navigationBar)
@@ -61,6 +63,18 @@ struct TaskView: View {
                                 //edit code here
                             }.tint(K.Colors.text)
                         }
+                        
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Picker("Sort By:", selection: $sortingChoice){
+                                Text("Category").tag(SortingChoice.parentCategory)
+                                Text("Due Date").tag(SortingChoice.dueDate)
+                                Text("Progress").tag(SortingChoice.progress)
+                                Text("Completed").tag(SortingChoice.completed)
+                                Text("Individual Task").tag(SortingChoice.individualTask)
+                            }
+                            .tint(K.Colors.text)
+                        }
+                        
                         ToolbarItem(placement: .navigationBarTrailing){
                             Button{
                                 isPresented = true
@@ -76,12 +90,21 @@ struct TaskView: View {
             })
         }
     }
+    
+//    func sortingOptions() -> Results<Task>{
+//        if sortingChoice == SortingChoice.parentCategory {
+//            return tasks.sorted(byKeyPath: sortingChoice.rawValue)
+//        }
+//        else if sortingChoice == SortingChoice.completed {
+//
+//        }
+//        return tasks
+//    }
 
     func getBackground(task: Task) -> [String]{
         //this is causing an error
         let category = task.parentCategory
         if let colors = category.first?.color {
-            print(colors)
             return Array(colors)
         }
         return ["#ffffff","#ffffff"]

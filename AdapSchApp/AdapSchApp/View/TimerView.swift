@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct TimerView: View {
+    let task: Task
     var body: some View {
-        Text("Timer View")
+        Text("\(task.title) Timer View")
     }
 }
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView()
+        TimerView(task: Task())
     }
 }
