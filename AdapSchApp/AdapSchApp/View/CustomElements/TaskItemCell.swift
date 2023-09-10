@@ -32,6 +32,10 @@ struct TaskItemCell: View {
                 Text(task.title)
                 if !task.weekTask{
                     Text("due \(dateFormatter.string(from: task.dueDate))")
+                        .foregroundColor(task.dueDate <= Date() ? .red : K.Colors.text)
+                }
+                else{
+                    Text("")
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -50,8 +54,8 @@ struct TaskItemCell: View {
         .background(RoundedRectangle(cornerRadius: 10)
             .fill(darkMode == .light ? Color(UIColor(hex: background[0]) ?? .red) : Color(UIColor(hex: background[1]) ?? .red))
             .frame(height: 70))
-        .frame(maxWidth: .infinity, maxHeight: 200)
-        .padding()
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 15)
         .foregroundColor(K.Colors.text)
         .fixedSize(horizontal: false, vertical: true)
         

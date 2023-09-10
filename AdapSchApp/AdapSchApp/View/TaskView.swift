@@ -23,13 +23,13 @@ struct TaskView: View {
         case .parentCategory:
             return tasks.sorted { ($0.parentCategory.first?.color[0])! < ($1.parentCategory.first?.color[0])!}
         case .dueDate:
-            return tasks.sorted { ($0.dueDate < $1.dueDate) || (!$0.weekTask && $1.weekTask) }
+            return (tasks.sorted { (!$0.weekTask && $1.weekTask) || ($0.weekTask && !$1.weekTask) }).sorted { ($0.dueDate < $1.dueDate) || $1.weekTask  }
         case .progress:
             return tasks.sorted { $0.time == 0 ? false : ($1.time == 0 ? true : ($0.timeDone / $0.time) > $1.timeDone / $1.time) }
         case .completed:
             return tasks.sorted { ($0.timeDone > $0.time) && !($1.timeDone > $1.time)}
         case .individualTask:
-            return tasks.sorted { !$0.weekTask && $1.weekTask}
+            return tasks.sorted { (!$0.weekTask && $1.weekTask) || ($0.weekTask && !$1.weekTask) }
         }
     }
     
