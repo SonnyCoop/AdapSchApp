@@ -11,7 +11,7 @@ import RealmSwift
 struct TaskView: View {
     //when true add screen is shown
     @State private var isPresented: Bool = false
-    @State private var sortingChoice: SortingChoice = .dueDate
+    @State private var sortingChoice: SortingChoice = .parentCategory
     
     enum SortingChoice: String, CaseIterable, Identifiable {
         case parentCategory, dueDate, progress, completed, individualTask
@@ -21,9 +21,9 @@ struct TaskView: View {
     var sortedTasks: [Task] {
         switch sortingChoice {
         case .parentCategory:
-            return tasks.sorted { ($0.parentCategory.first?.title)! < ($1.parentCategory.first?.title)!}
+            return tasks.sorted { ($0.parentCategory.first?.color[0])! < ($1.parentCategory.first?.color[0])!}
         case .dueDate:
-            return tasks.sorted { $0.dueDate < $1.dueDate}
+            return tasks.sorted { ($0.dueDate < $1.dueDate) || (!$0.weekTask && $1.weekTask) }
         case .progress:
             return tasks.sorted { $0.timeDone / $0.time > $1.timeDone / $1.time}
         case .completed:

@@ -28,17 +28,24 @@ struct TaskItemCell: View {
     
     var body: some View {
         HStack{
-            VStack{
+            VStack(alignment: .leading){
                 Text(task.title)
-                Text("due \(dateFormatter.string(from: task.dueDate))")
+                if !task.weekTask{
+                    Text("due \(dateFormatter.string(from: task.dueDate))")
+                }
             }
-            Spacer()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             ProgressView(value: Float(task.timeDone), total: Float(task.time)) //error maker
+                .frame(maxHeight: .infinity)
+                .padding()
         }
-        .background(RoundedRectangle(cornerRadius: 10).fill(darkMode == .light ? Color(UIColor(hex: background[0]) ?? .red) : Color(UIColor(hex: background[1]) ?? .red)))
-        .frame(maxWidth: .infinity)
+        .background(RoundedRectangle(cornerRadius: 10)
+            .fill(darkMode == .light ? Color(UIColor(hex: background[0]) ?? .red) : Color(UIColor(hex: background[1]) ?? .red))
+            .frame(height: 70))
+        .frame(maxWidth: .infinity, maxHeight: 200)
         .padding()
         .foregroundColor(K.Colors.text)
+        .fixedSize(horizontal: false, vertical: true)
         
         .onTapGesture {
             isPresented = true
