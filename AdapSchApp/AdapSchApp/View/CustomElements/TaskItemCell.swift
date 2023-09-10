@@ -45,7 +45,7 @@ struct TaskItemCell: View {
                     .padding(.horizontal, 10)
             }
             else{
-                ProgressView(value: Float(task.timeDone), total: Float(task.time)) //error maker
+                ProgressView(value: Float(task.timeDone), total: Float(task.time))
                     .frame(maxHeight: .infinity)
                     .padding(.horizontal, 10)
             }
