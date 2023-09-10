@@ -25,7 +25,7 @@ struct TaskView: View {
         case .dueDate:
             return tasks.sorted { ($0.dueDate < $1.dueDate) || (!$0.weekTask && $1.weekTask) }
         case .progress:
-            return tasks.sorted { $0.timeDone / $0.time > $1.timeDone / $1.time}
+            return tasks.sorted { $0.time == 0 ? false : ($1.time == 0 ? true : ($0.timeDone / $0.time) > $1.timeDone / $1.time) }
         case .completed:
             return tasks.sorted { ($0.timeDone > $0.time) && !($1.timeDone > $1.time)}
         case .individualTask:
@@ -46,7 +46,7 @@ struct TaskView: View {
                         ForEach(sortedTasks, id: \.self) { task in
                             TaskItemCell(task: task, background: getBackground(task: task))
                         }
-                        .onDelete(perform: $tasks.remove)
+                        .onDelete(perform: deleteRow)
                     }
                     .listRowBackground(K.Colors.background1)
                     .listRowSeparator(.hidden)
@@ -91,15 +91,18 @@ struct TaskView: View {
         }
     }
     
-//    func sortingOptions() -> Results<Task>{
-//        if sortingChoice == SortingChoice.parentCategory {
-//            return tasks.sorted(byKeyPath: sortingChoice.rawValue)
-//        }
-//        else if sortingChoice == SortingChoice.completed {
-//
-//        }
-//        return tasks
-//    }
+    func deleteRow(at offsets: IndexSet){
+        if offsets.first != nil {
+            let deletedTask = sortedTasks[offsets.first!]
+            if let indexToDelete = tasks.firstIndex(where: {
+                $0 == deletedTask}) {
+                let indexSet: IndexSet = [indexToDelete]
+                $tasks.remove(atOffsets: indexSet)
+            }
+                
+        }
+        
+    }
 
     func getBackground(task: Task) -> [String]{
         //this is causing an error

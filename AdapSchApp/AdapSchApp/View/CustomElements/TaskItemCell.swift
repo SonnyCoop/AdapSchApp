@@ -36,9 +36,16 @@ struct TaskItemCell: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding(.leading, 10)
-            ProgressView(value: Float(task.timeDone), total: Float(task.time)) //error maker
-                .frame(maxHeight: .infinity)
-                .padding(.horizontal, 10)
+            if task.timeDone >= task.time {
+                Text("Completed")
+                    .padding(.horizontal, 10)
+            }
+            else{
+                ProgressView(value: Float(task.timeDone), total: Float(task.time)) //error maker
+                    .frame(maxHeight: .infinity)
+                    .padding(.horizontal, 10)
+            }
+            
         }
         .background(RoundedRectangle(cornerRadius: 10)
             .fill(darkMode == .light ? Color(UIColor(hex: background[0]) ?? .red) : Color(UIColor(hex: background[1]) ?? .red))

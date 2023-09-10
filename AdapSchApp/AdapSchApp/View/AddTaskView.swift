@@ -215,8 +215,6 @@ struct AddTaskView: View {
                                 //category picker
                                 HStack{
                                     Picker("Category:", selection: $category){
-                                        Text("No Category")
-                                            .tag("No Category")
                                         ForEach(categories){ //line giving issues in view mode
                                             cat in
                                             Text("\(cat.title)")
