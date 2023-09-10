@@ -34,7 +34,7 @@ struct AddTaskView: View {
     //setting up realm
     let realm = try! Realm()
     @ObservedResults(Category.self) var categories
-    @ObservedResults(Task.self) var tasks
+//    @ObservedResults(Task.self) var tasks
     @ObservedResults(Downtime.self) var downtimes
     
     @Environment(\.dismiss) private var dismiss
@@ -215,8 +215,6 @@ struct AddTaskView: View {
                                 //category picker
                                 HStack{
                                     Picker("Category:", selection: $category){
-                                        Text("No Category")
-                                            .tag("No Category")
                                         ForEach(categories){ //line giving issues in view mode
                                             cat in
                                             Text("\(cat.title)")
