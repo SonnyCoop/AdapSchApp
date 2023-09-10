@@ -11,13 +11,13 @@ struct CircularProgressBar: View {
     let progress: Double
     
     var body: some View {
-        ZStack { // 1
+        ZStack { // background
             Circle()
                 .stroke(
                     K.Colors.text,
                     lineWidth: 20
                 )
-            Circle() // 2
+            Circle() // progress
                 .trim(from: 0, to: progress)
                 .stroke(
                     K.Colors.tab,

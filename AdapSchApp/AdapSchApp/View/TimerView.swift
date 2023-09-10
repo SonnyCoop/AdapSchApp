@@ -11,11 +11,15 @@ import RealmSwift
 struct TimerView: View {
     let task: Task
     
+    
+    //timer variables
     @State private var timerType: TimerType = .regular
     @State private var paused: Bool = false
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     @State private var completed: Bool = false
     
+    //add for different timers e.g. 25-5 timer
     enum TimerType: String, CaseIterable, Identifiable {
         case regular
         var id: Self { self }
@@ -36,6 +40,7 @@ struct TimerView: View {
                         .fill(K.Colors.background1)
                         .border(K.Colors.background2))
                     Spacer()
+                    //MARK: - Timer
                     ZStack{
                         CircularProgressBar(progress: 0.25)
                             .frame(width: 200, height: 200)
@@ -52,6 +57,7 @@ struct TimerView: View {
                     }
                     
                     Spacer()
+                    //MARK: - Total Progress
                     HStack{
                         if completed || task.timeDone >= task.time {
                             ProgressView(value: 1, total: 1)
@@ -75,7 +81,7 @@ struct TimerView: View {
                     }
                     Spacer()
                     Button("Finish Session"){
-                        
+                        //if completed is true set task.time to equal task.timeDone
                     }
                     .buttonStyle(CustomButton())
                 }

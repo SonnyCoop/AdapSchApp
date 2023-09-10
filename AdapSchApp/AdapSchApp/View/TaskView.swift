@@ -18,6 +18,7 @@ struct TaskView: View {
         var id: Self { self }
     }
     
+    //MARK: - Sorting Methods
     var sortedTasks: [Task] {
         switch sortingChoice {
         case .parentCategory:
@@ -33,6 +34,7 @@ struct TaskView: View {
         }
     }
     
+    //realm setup
     let realm = try! Realm()
     @ObservedResults(Task.self) var tasks
     
@@ -41,6 +43,7 @@ struct TaskView: View {
             ZStack{
                 //setting background colour
                 K.Colors.background1.ignoresSafeArea()
+                //adding all the items
                 List{
                     Section{
                         ForEach(sortedTasks, id: \.self) { task in
@@ -63,7 +66,7 @@ struct TaskView: View {
                                 //edit code here
                             }.tint(K.Colors.text)
                         }
-                        
+                        //picking sorting option
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Picker("Sort By:", selection: $sortingChoice){
                                 Text("Category").tag(SortingChoice.parentCategory)
@@ -84,13 +87,14 @@ struct TaskView: View {
                         }
                     }
             }
-            //when true addTaskView appears from the bottom layed over the top --  will crash on second run due to still being true
+            //when true addTaskView appears from the bottom layed over the top
             .sheet(isPresented: $isPresented, content: {
                 AddTaskView()
             })
         }
     }
     
+    //MARK: - Delete Method
     func deleteRow(at offsets: IndexSet){
         if offsets.first != nil {
             let deletedTask = sortedTasks[offsets.first!]
@@ -99,13 +103,11 @@ struct TaskView: View {
                 let indexSet: IndexSet = [indexToDelete]
                 $tasks.remove(atOffsets: indexSet)
             }
-                
         }
-        
     }
 
+    //gets the category colours so they can be used for the background of the boxes
     func getBackground(task: Task) -> [String]{
-        //this is causing an error
         let category = task.parentCategory
         if let colors = category.first?.color {
             return Array(colors)
