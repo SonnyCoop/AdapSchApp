@@ -11,6 +11,7 @@ import RealmSwift
 struct TimerView: View {
     let task: Task
     @State var timeRemaining: Int
+    @State var totalTimeDone: Int
 
     //timer variables
     @State private var timerType: TimerType = .regular
@@ -28,6 +29,10 @@ struct TimerView: View {
     }
     
     @Environment(\.dismiss) private var dismiss
+    
+    //realm setup
+    let realm = try! Realm()
+    @ObservedResults(Task.self) var tasks
     
     var body: some View {
         NavigationView{
@@ -79,14 +84,14 @@ struct TimerView: View {
                                 .tint(K.Colors.tab)
                         }
                         else{
-                            ProgressView(value: Float(task.timeDone), total: Float(task.time))
+                            ProgressView(value: Float(totalTimeDone), total: Float(task.time))
                                 .padding(.leading, 15)
                                 .tint(K.Colors.tab)
                         }
                         Button{
                             completed = !completed
                         } label: {
-                            Image(systemName: completed || task.timeDone >= task.time ?  "checkmark.circle.fill" : "checkmark.circle")
+                            Image(systemName: completed || totalTimeDone >= task.time ?  "checkmark.circle.fill" : "checkmark.circle")
                                 .foregroundColor(K.Colors.tab)
                                 .padding()
                         }
@@ -96,6 +101,8 @@ struct TimerView: View {
                     Spacer()
                     Button("Finish Session"){
                         //if completed is true set task.time to equal task.timeDone
+                        
+                        //totalTimeDone needs to persist task.timeDone
                     }
                     .buttonStyle(CustomButton())
                 }
@@ -118,11 +125,13 @@ struct TimerView: View {
         }
     }
     func timeFormatter() -> String{
+        //formatting the date
         let totalHrs = timeRemaining / 3600
         var totalSecs = timeRemaining % 3600
         let totalMins = totalSecs / 60
         totalSecs = totalSecs % 60
         
+        //turning it into strings
         let stringMins = totalMins / 10 == 0 ? "0\(totalMins)" : "\(totalMins)"
         let stringSecs = totalSecs / 10 == 0 ? "0\(totalSecs)" : "\(totalSecs)"
         
@@ -134,6 +143,18 @@ struct TimerView: View {
         else {
             timerString = "\(totalHrs):"+stringMins+":"+stringSecs
         }
+        
+        //data persistance
+        if totalSecs == 0 {
+//            do{
+//                try realm.write{
+//                    task.thaw()?.timeDone += 1
+//                }
+//            }catch{
+//                print("error updating data, \(error)")
+//            }
+            totalTimeDone += 1
+        }
     
         if overtime{
             return "+ "+timerString
@@ -144,6 +165,6 @@ struct TimerView: View {
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView(task: Task(), timeRemaining: 10)
+        TimerView(task: Task(), timeRemaining: 10, totalTimeDone: 10)
     }
 }

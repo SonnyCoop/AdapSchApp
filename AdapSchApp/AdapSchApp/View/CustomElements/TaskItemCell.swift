@@ -66,7 +66,7 @@ struct TaskItemCell: View {
         
         //when true timer slides up
         .sheet(isPresented: $isPresented, content: {
-            TimerView(task: task, timeRemaining: task.blockLenghts * 60 )
+            TimerView(task: task, timeRemaining: task.blockLenghts * 60, totalTimeDone: task.timeDone )
         })
     }
 }
