@@ -12,6 +12,7 @@ struct ContentView: View {
     init(){
         UITabBar.appearance().backgroundColor = UIColor(K.Colors.tab)
         UITabBar.appearance().unselectedItemTintColor = UIColor(K.Colors.text)
+        UITabBar.appearance().barTintColor = UIColor(K.Colors.tab)
     }
     
     //set the default screen to calendar

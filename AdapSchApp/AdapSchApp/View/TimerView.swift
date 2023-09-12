@@ -17,6 +17,7 @@ struct TimerView: View {
     @State private var timerType: TimerType = .regular
     @State private var paused: Bool = false
     @State private var overtime: Bool = false
+//    @State private var timeStarted
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -54,7 +55,7 @@ struct TimerView: View {
                         VStack{
                             Text(timeFormatter())
                                 .onReceive(timer, perform: { _ in
-                                    if overtime {
+                                    if overtime && !paused {
                                         timeRemaining += 1
                                     }
                                     else if timeRemaining > 0 && !paused {
@@ -63,6 +64,10 @@ struct TimerView: View {
                                     else if timeRemaining == 0 && !paused {
                                         overtime = true
                                         timeRemaining += 1
+                                    }
+                                    
+                                    if timeRemaining % 60 == 0 {
+                                        totalTimeDone += 1
                                     }
                                 })
                                 .padding()
@@ -78,7 +83,7 @@ struct TimerView: View {
                     Spacer()
                     //MARK: - Total Progress
                     HStack{
-                        if completed || task.timeDone >= task.time {
+                        if completed || totalTimeDone >= task.time {
                             ProgressView(value: 1, total: 1)
                                 .padding(.leading, 15)
                                 .tint(K.Colors.tab)
@@ -87,6 +92,7 @@ struct TimerView: View {
                             ProgressView(value: Float(totalTimeDone), total: Float(task.time))
                                 .padding(.leading, 15)
                                 .tint(K.Colors.tab)
+                                .animation(.easeOut, value: totalTimeDone)
                         }
                         Button{
                             completed = !completed
@@ -101,8 +107,17 @@ struct TimerView: View {
                     Spacer()
                     Button("Finish Session"){
                         //if completed is true set task.time to equal task.timeDone
-                        
-                        //totalTimeDone needs to persist task.timeDone
+                        if completed {
+                            do{
+                                try realm.write{
+                                    task.thaw()?.time = totalTimeDone
+                                }
+                            }catch{
+                                print("error updating data, \(error)")
+                            }
+                        }
+                        updateTimeDone()
+                        dismiss()
                     }
                     .buttonStyle(CustomButton())
                 }
@@ -112,6 +127,7 @@ struct TimerView: View {
                     ToolbarItem() {
                         Button("Cancel") {
                             //edit code here
+                            updateTimeDone()
                             dismiss()
                         }.tint(K.Colors.text)
                     }
@@ -143,23 +159,21 @@ struct TimerView: View {
         else {
             timerString = "\(totalHrs):"+stringMins+":"+stringSecs
         }
-        
-        //data persistance
-        if totalSecs == 0 {
-//            do{
-//                try realm.write{
-//                    task.thaw()?.timeDone += 1
-//                }
-//            }catch{
-//                print("error updating data, \(error)")
-//            }
-            totalTimeDone += 1
-        }
     
         if overtime{
             return "+ "+timerString
         }
         return timerString
+    }
+    
+    func updateTimeDone() {
+        do{
+            try realm.write{
+                task.thaw()?.timeDone = totalTimeDone
+            }
+        }catch{
+            print("error updating data, \(error)")
+        }
     }
 }
 

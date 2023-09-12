@@ -14,7 +14,7 @@ struct TaskView: View {
     @State private var sortingChoice: SortingChoice = .parentCategory
     
     enum SortingChoice: String, CaseIterable, Identifiable {
-        case parentCategory, dueDate, progress, completed, individualTask
+        case parentCategory, dueDate, progress, individualTask
         var id: Self { self }
     }
     
@@ -26,9 +26,7 @@ struct TaskView: View {
         case .dueDate:
             return (tasks.sorted { (!$0.weekTask && $1.weekTask) || ($0.weekTask && !$1.weekTask) }).sorted { ($0.dueDate < $1.dueDate) || $1.weekTask  }
         case .progress:
-            return tasks.sorted { $0.time == 0 ? false : ($1.time == 0 ? true : ($0.timeDone / $0.time) > $1.timeDone / $1.time) }
-        case .completed:
-            return tasks.sorted { ($0.timeDone > $0.time) && !($1.timeDone > $1.time)}
+            return tasks.sorted { !($0.time == 0 ? false : ($1.time == 0 ? true : ($0.timeDone / $0.time) > $1.timeDone / $1.time)) }
         case .individualTask:
             return tasks.sorted { (!$0.weekTask && $1.weekTask) || ($0.weekTask && !$1.weekTask) }
         }
@@ -37,6 +35,7 @@ struct TaskView: View {
     //realm setup
     let realm = try! Realm()
     @ObservedResults(Task.self) var tasks
+    
     
     var body: some View {
         NavigationView{
@@ -72,7 +71,6 @@ struct TaskView: View {
                                 Text("Category").tag(SortingChoice.parentCategory)
                                 Text("Due Date").tag(SortingChoice.dueDate)
                                 Text("Progress").tag(SortingChoice.progress)
-                                Text("Completed").tag(SortingChoice.completed)
                                 Text("Individual Task").tag(SortingChoice.individualTask)
                             }
                             .tint(K.Colors.text)
@@ -91,6 +89,7 @@ struct TaskView: View {
             .sheet(isPresented: $isPresented, content: {
                 AddTaskView()
             })
+            
         }
     }
     
