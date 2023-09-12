@@ -9,6 +9,12 @@ import Foundation
 
 //MARK: - Date Extension Methods
 extension Date {
+    
+    //seconds between dates
+    static func - (lhs: Date, rhs: Date) -> TimeInterval {
+        return lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
+    }
+    
     static func today() -> Date {
         return Date()
     }

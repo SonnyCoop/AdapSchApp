@@ -10,14 +10,22 @@ import RealmSwift
 
 struct TimerView: View {
     let task: Task
+    //task.blockLengths in seconds
+    @State var timeBlock: Int
     @State var timeRemaining: Int
+    
+    //task.timeDone equivilent
     @State var totalTimeDone: Int
 
     //timer variables
     @State private var timerType: TimerType = .regular
     @State private var paused: Bool = false
     @State private var overtime: Bool = false
-//    @State private var timeStarted
+    @State private var timeStarted: Date = Date()
+    @State private var trueTimeStarted = Date()
+    @State private var pauseTime = Date()
+    
+    
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -56,23 +64,27 @@ struct TimerView: View {
                             Text(timeFormatter())
                                 .onReceive(timer, perform: { _ in
                                     if overtime && !paused {
-                                        timeRemaining += 1
+                                        timeRemaining = Int(Date() - timeStarted) - timeBlock
                                     }
                                     else if timeRemaining > 0 && !paused {
-                                        timeRemaining -= 1
+                                        timeRemaining = timeBlock - Int(Date() - timeStarted)
                                     }
                                     else if timeRemaining == 0 && !paused {
                                         overtime = true
-                                        timeRemaining += 1
+                                        timeRemaining += Int(Date() - timeStarted) - timeBlock
                                     }
-                                    
-                                    if timeRemaining % 60 == 0 {
-                                        totalTimeDone += 1
+                                    else if paused {
+                                        timeStarted = trueTimeStarted + (Date() - pauseTime)
+                                    }
+                                    if timeRemaining % 60 == 0 && overtime{
+                                        totalTimeDone = task.timeDone + (Int(Date() - timeStarted)/60)
                                     }
                                 })
                                 .padding()
                             Button{
                                 paused = !paused
+                                pauseTime = Date()
+                                trueTimeStarted = timeStarted
                             } label: {
                                 Image(systemName: paused ? "play.fill" : "pause.fill")
                                     .padding()
@@ -141,7 +153,7 @@ struct TimerView: View {
         }
     }
     func timeFormatter() -> String{
-        //formatting the date
+
         let totalHrs = timeRemaining / 3600
         var totalSecs = timeRemaining % 3600
         let totalMins = totalSecs / 60
@@ -179,6 +191,6 @@ struct TimerView: View {
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView(task: Task(), timeRemaining: 10, totalTimeDone: 10)
+        TimerView(task: Task(), timeBlock: 10, timeRemaining: 10, totalTimeDone: 10)
     }
 }
