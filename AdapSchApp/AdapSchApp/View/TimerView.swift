@@ -12,20 +12,26 @@ struct TimerView: View {
     let task: Task
     //task.blockLengths in seconds
     @State var timeBlock: Int
-    @State var timeRemaining: Int
-    
-    //task.timeDone equivilent
     @State var totalTimeDone: Int
 
     //timer variables
     @State private var timerType: TimerType = .regular
     @State private var paused: Bool = false
     @State private var overtime: Bool = false
-    @State private var timeStarted: Date = Date()
-    @State private var trueTimeStarted = Date()
-    @State private var pauseTime = Date()
+    @ObservedObject private var taskTimer: TaskTimer
     
-    
+//    init(task: Task, timeBlocks: Int, totalTimeDone: Int) {
+//        self.task = task
+//        self.timeBlock = timeBlocks
+//        self.totalTimeDone = totalTimeDone
+//        self.taskTimer = TaskTimer()
+//    }
+    init(task: Task, timeBlock: Int, totalTimeDone: Int) {
+        self.task = task
+        _timeBlock = State(initialValue: timeBlock)
+        self.totalTimeDone = totalTimeDone
+        self.taskTimer = TaskTimer()
+    }
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -58,33 +64,38 @@ struct TimerView: View {
                     Spacer()
                     //MARK: - Timer
                     ZStack{
-                        CircularProgressBar(progress: !overtime ? (Double(timeRemaining) / Double(task.blockLenghts * 60)) : 0)
-                            .frame(width: 200, height: 200)
+//                        CircularProgressBar(progress: !overtime ? (Double(timeRemaining) / Double(task.blockLenghts * 60)) : 0)
+//                            .frame(width: 200, height: 200)
                         VStack{
-                            Text(timeFormatter())
-                                .onReceive(timer, perform: { _ in
-                                    if overtime && !paused {
-                                        timeRemaining = Int(Date() - timeStarted) - timeBlock
-                                    }
-                                    else if timeRemaining > 0 && !paused {
-                                        timeRemaining = timeBlock - Int(Date() - timeStarted)
-                                    }
-                                    else if timeRemaining == 0 && !paused {
-                                        overtime = true
-                                        timeRemaining += Int(Date() - timeStarted) - timeBlock
-                                    }
-                                    else if paused {
-                                        timeStarted = trueTimeStarted + (Date() - pauseTime)
-                                    }
-                                    if timeRemaining % 60 == 0 && overtime{
-                                        totalTimeDone = task.timeDone + (Int(Date() - timeStarted)/60)
-                                    }
-                                })
+                            Text(taskTimer.message)
+//                            Text(timeFormatter())
+//                                .onReceive(timer, perform: { _ in
+//                                    if overtime && !paused {
+//                                        timeRemaining = Int(Date() - timeStarted) - timeBlock
+//                                    }
+//                                    else if timeRemaining > 0 && !paused {
+//                                        timeRemaining = timeBlock - Int(Date() - timeStarted)
+//                                    }
+//                                    else if timeRemaining == 0 && !paused {
+//                                        overtime = true
+//                                        timeRemaining += Int(Date() - timeStarted) - timeBlock
+//                                    }
+//                                    else if paused {
+//                                        timeStarted = trueTimeStarted + (Date() - pauseTime)
+//                                    }
+//                                    if timeRemaining % 60 == 0 && overtime{
+//                                        totalTimeDone = task.timeDone + (Int(Date() - timeStarted)/60)
+//                                    }
+//                                })
                                 .padding()
                             Button{
                                 paused = !paused
-                                pauseTime = Date()
-                                trueTimeStarted = timeStarted
+                                if paused {
+                                    taskTimer.pause()
+                                }
+                                else{
+                                    taskTimer.start()
+                                }
                             } label: {
                                 Image(systemName: paused ? "play.fill" : "pause.fill")
                                     .padding()
@@ -140,6 +151,7 @@ struct TimerView: View {
                         Button("Cancel") {
                             //edit code here
                             updateTimeDone()
+                            
                             dismiss()
                         }.tint(K.Colors.text)
                     }
@@ -151,31 +163,6 @@ struct TimerView: View {
                     
             }
         }
-    }
-    func timeFormatter() -> String{
-
-        let totalHrs = timeRemaining / 3600
-        var totalSecs = timeRemaining % 3600
-        let totalMins = totalSecs / 60
-        totalSecs = totalSecs % 60
-        
-        //turning it into strings
-        let stringMins = totalMins / 10 == 0 ? "0\(totalMins)" : "\(totalMins)"
-        let stringSecs = totalSecs / 10 == 0 ? "0\(totalSecs)" : "\(totalSecs)"
-        
-        var timerString = ""
-        
-        if totalHrs == 0 {
-            timerString = stringMins+":"+stringSecs
-        }
-        else {
-            timerString = "\(totalHrs):"+stringMins+":"+stringSecs
-        }
-    
-        if overtime{
-            return "+ "+timerString
-        }
-        return timerString
     }
     
     func updateTimeDone() {
@@ -191,6 +178,6 @@ struct TimerView: View {
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView(task: Task(), timeBlock: 10, timeRemaining: 10, totalTimeDone: 10)
+        TimerView(task: Task(), timeBlock: 10, totalTimeDone: 10)
     }
 }
