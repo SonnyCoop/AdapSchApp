@@ -8,6 +8,8 @@
 import SwiftUI
 
 class TaskTimer: ObservableObject {
+    /// where the start time is saved
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TimesSaved.plist")
     /// String to show in UI
     @Published private(set) var message = "Not running"
 
@@ -18,6 +20,8 @@ class TaskTimer: ObservableObject {
     private var startTime: Date? = nil
     private var pauseTime: Date = Date()
     private var wasPaused = false
+    private var sessionBlock: Int
+    private var time: Int
 
     /// The timer
     private var timer = Timer()
@@ -25,7 +29,9 @@ class TaskTimer: ObservableObject {
     ///  Whether the time session is officially finished
     private var overtime = false
 
-    init() {
+    init(sessionBlock: Int) {
+        self.sessionBlock = sessionBlock
+        self.time = sessionBlock
         startTime = fetchStartTime()
 
         if startTime != nil {
@@ -49,11 +55,7 @@ extension TaskTimer {
         timer.invalidate()
         pauseTime = Date()
         wasPaused = true
-    }
-    
-    
-    func inOvertime(){
-        overtime = true
+        setPauseTime()
     }
     
     //runs each second
@@ -62,14 +64,25 @@ extension TaskTimer {
         let now = Date()
         if wasPaused, let tempStartTime = startTime {
             startTime = tempStartTime + (now - pauseTime)
-            saveStartTime()
             wasPaused = false
+            setPauseTime()
         }
         let elapsed = Int(now - startTime!)
-        self.message = updateTimer(time: elapsed)
+        if overtime{
+            time = elapsed - sessionBlock
+        }
+        else if sessionBlock == 0 {
+            time = elapsed - sessionBlock
+            overtime = true
+        }
+        else{
+            time = sessionBlock - elapsed
+        }
+        
+        self.message = updateTimer()
     }
     
-    func updateTimer(time: Int) -> String{
+    func updateTimer() -> String{
 
         let totalHrs = time / 3600
         var totalSecs = time % 3600
@@ -96,14 +109,67 @@ extension TaskTimer {
     }
 }
 
+//MARK: - Getter and Setter methods
+extension TaskTimer {
+    func percentDone() -> Double{
+        if overtime {
+            return 0
+        }
+        else{
+            return Double(time)/Double(sessionBlock)
+        }
+    }
+    
+    func clearStartTime(){
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(TimeSaved(startTime: nil))
+            try data.write(to: dataFilePath!)
+        }catch{
+            print("error encoding item array, \(error)")
+        }
+    }
+}
+
 //MARK: - saving data
 extension TaskTimer {
     func saveStartTime(){
-        //change this to save to plist
-        
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(TimeSaved())
+            try data.write(to: dataFilePath!)
+        }catch{
+            print("error encoding item array, \(error)")
+        }
     }
+    
     func fetchStartTime() -> Date?{
         //change this to fetch from plist
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do{
+                let dataRetrived = try decoder.decode(TimeSaved.self, from: data)
+                if let timeSaved = dataRetrived.startTime{
+                    pauseTime = dataRetrived.pauseTime
+                    wasPaused = dataRetrived.paused
+                    return timeSaved
+                }
+            }catch{
+                print("error decoding item array, \(error)")
+            }
+            
+        }
+        saveStartTime()
         return Date()
+    }
+    
+    func setPauseTime(){
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(TimeSaved(startTime: startTime, pauseTime: pauseTime, paused: wasPaused))
+            try data.write(to: dataFilePath!)
+        }catch{
+            print("error encoding item array, \(error)")
+        }
     }
 }

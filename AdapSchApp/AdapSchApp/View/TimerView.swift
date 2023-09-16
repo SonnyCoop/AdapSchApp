@@ -20,17 +20,11 @@ struct TimerView: View {
     @State private var overtime: Bool = false
     @ObservedObject private var taskTimer: TaskTimer
     
-//    init(task: Task, timeBlocks: Int, totalTimeDone: Int) {
-//        self.task = task
-//        self.timeBlock = timeBlocks
-//        self.totalTimeDone = totalTimeDone
-//        self.taskTimer = TaskTimer()
-//    }
     init(task: Task, timeBlock: Int, totalTimeDone: Int) {
         self.task = task
         _timeBlock = State(initialValue: timeBlock)
-        self.totalTimeDone = totalTimeDone
-        self.taskTimer = TaskTimer()
+        _totalTimeDone = State(initialValue: totalTimeDone)
+        self.taskTimer = TaskTimer(sessionBlock: timeBlock)
     }
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -64,29 +58,10 @@ struct TimerView: View {
                     Spacer()
                     //MARK: - Timer
                     ZStack{
-//                        CircularProgressBar(progress: !overtime ? (Double(timeRemaining) / Double(task.blockLenghts * 60)) : 0)
-//                            .frame(width: 200, height: 200)
+                        CircularProgressBar(progress: taskTimer.percentDone())
+                            .frame(width: 200, height: 200)
                         VStack{
                             Text(taskTimer.message)
-//                            Text(timeFormatter())
-//                                .onReceive(timer, perform: { _ in
-//                                    if overtime && !paused {
-//                                        timeRemaining = Int(Date() - timeStarted) - timeBlock
-//                                    }
-//                                    else if timeRemaining > 0 && !paused {
-//                                        timeRemaining = timeBlock - Int(Date() - timeStarted)
-//                                    }
-//                                    else if timeRemaining == 0 && !paused {
-//                                        overtime = true
-//                                        timeRemaining += Int(Date() - timeStarted) - timeBlock
-//                                    }
-//                                    else if paused {
-//                                        timeStarted = trueTimeStarted + (Date() - pauseTime)
-//                                    }
-//                                    if timeRemaining % 60 == 0 && overtime{
-//                                        totalTimeDone = task.timeDone + (Int(Date() - timeStarted)/60)
-//                                    }
-//                                })
                                 .padding()
                             Button{
                                 paused = !paused
@@ -140,6 +115,7 @@ struct TimerView: View {
                             }
                         }
                         updateTimeDone()
+                        taskTimer.clearStartTime()
                         dismiss()
                     }
                     .buttonStyle(CustomButton())
@@ -149,8 +125,10 @@ struct TimerView: View {
                 .toolbar {
                     ToolbarItem() {
                         Button("Cancel") {
-                            //edit code here
+                            //saves progress to realm
                             updateTimeDone()
+                            //clears timer
+                            taskTimer.clearStartTime()
                             
                             dismiss()
                         }.tint(K.Colors.text)
