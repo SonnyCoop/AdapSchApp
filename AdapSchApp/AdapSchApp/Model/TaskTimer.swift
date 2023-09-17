@@ -14,7 +14,7 @@ class TaskTimer: ObservableObject {
     @Published private(set) var message = "Not running"
 
     /// Is the timer running?
-    @Published private(set) var isRunning = false
+    @Published private(set) var progress = 0
 
     /// Time that we're counting from
     private var startTime: Date? = nil
@@ -64,6 +64,7 @@ extension TaskTimer {
                 time = sessionBlock - Int(pauseTime - originalTime)
                 if time < 0{
                     time = time * -1
+                    overtime = true
                 }
                 self.message = updateTimer()
             }
@@ -86,7 +87,7 @@ extension TaskTimer {
         if overtime{
             time = elapsed - sessionBlock
         }
-        else if sessionBlock == 0 {
+        else if time == 0 {
             time = elapsed - sessionBlock
             overtime = true
         }
@@ -94,11 +95,18 @@ extension TaskTimer {
             time = sessionBlock - elapsed
         }
         
+        if time < 0{
+            time = time * -1
+            overtime = true
+        }
+        
         self.message = updateTimer()
     }
     
     func updateTimer() -> String{
-
+      
+        progress = Int(Date() - startTime!) / 60
+        
         let totalHrs = time / 3600
         var totalSecs = time % 3600
         let totalMins = totalSecs / 60

@@ -88,7 +88,7 @@ struct TimerView: View {
                                 .tint(K.Colors.tab)
                         }
                         else{
-                            ProgressView(value: Float(totalTimeDone), total: Float(task.time))
+                            ProgressView(value: Float(totalTimeDone + taskTimer.progress), total: Float(task.time))
                                 .padding(.leading, 15)
                                 .tint(K.Colors.tab)
                                 .animation(.easeOut, value: totalTimeDone)
@@ -96,7 +96,7 @@ struct TimerView: View {
                         Button{
                             completed = !completed
                         } label: {
-                            Image(systemName: completed || totalTimeDone >= task.time ?  "checkmark.circle.fill" : "checkmark.circle")
+                            Image(systemName: completed || totalTimeDone + taskTimer.progress >= task.time ?  "checkmark.circle.fill" : "checkmark.circle")
                                 .foregroundColor(K.Colors.tab)
                                 .padding()
                         }
@@ -147,7 +147,7 @@ struct TimerView: View {
     func updateTimeDone() {
         do{
             try realm.write{
-                task.thaw()?.timeDone = totalTimeDone
+                task.thaw()?.timeDone = totalTimeDone + taskTimer.progress
             }
         }catch{
             print("error updating data, \(error)")

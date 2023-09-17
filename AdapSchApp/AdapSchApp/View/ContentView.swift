@@ -13,10 +13,12 @@ struct ContentView: View {
         UITabBar.appearance().backgroundColor = UIColor(K.Colors.tab)
         UITabBar.appearance().unselectedItemTintColor = UIColor(K.Colors.text)
         UITabBar.appearance().barTintColor = UIColor(K.Colors.tab)
+        clearTimers()
     }
     
     //set the default screen to calendar
     @State private var selection: Tab = .calendar
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TimesSaved.plist")
     
     //options for the tab
     enum Tab {
@@ -48,6 +50,16 @@ struct ContentView: View {
         }
         .accentColor(K.Colors.background2) //colour for selected
         
+    }
+    
+    func clearTimers(){
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(TimeSaved(startTime: nil))
+            try data.write(to: dataFilePath!)
+        }catch{
+            print("error encoding item array, \(error)")
+        }
     }
     
 }

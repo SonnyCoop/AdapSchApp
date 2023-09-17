@@ -88,6 +88,7 @@ struct TaskView: View {
             //when true addTaskView appears from the bottom layed over the top
             .sheet(isPresented: $isPresented, content: {
                 AddTaskView()
+                    .interactiveDismissDisabled()
             })
             
         }
