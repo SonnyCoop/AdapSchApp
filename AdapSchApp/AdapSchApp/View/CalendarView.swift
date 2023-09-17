@@ -38,6 +38,7 @@ struct CalendarView: View {
             //when true addTaskView slides up -- will crash if done a second time dues to bool already being true
             .sheet(isPresented: $isPresented, content: {
                 AddTaskView()
+                    .interactiveDismissDisabled()
             })
         }
     }
