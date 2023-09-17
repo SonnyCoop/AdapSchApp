@@ -20,11 +20,15 @@ struct TimerView: View {
     @State private var overtime: Bool = false
     @ObservedObject private var taskTimer: TaskTimer
     
+    //total time hours and mins
+    @ObservedObject private var totalTimeComputed: TotalTimeComputed
+    
     init(task: Task, timeBlock: Int, totalTimeDone: Int) {
         self.task = task
         _timeBlock = State(initialValue: timeBlock)
         _totalTimeDone = State(initialValue: totalTimeDone)
         self.taskTimer = TaskTimer(sessionBlock: timeBlock)
+        totalTimeComputed = TotalTimeComputed(task: task)
         self.paused = taskTimer.isPaused()
     }
     
@@ -82,13 +86,13 @@ struct TimerView: View {
                     Spacer()
                     //MARK: - Total Progress
                     HStack{
-                        if completed || totalTimeDone >= task.time {
+                        if completed || totalTimeDone >= totalTimeComputed.getTotal() {
                             ProgressView(value: 1, total: 1)
                                 .padding(.leading, 15)
                                 .tint(K.Colors.tab)
                         }
                         else{
-                            ProgressView(value: Float(totalTimeDone + taskTimer.progress), total: Float(task.time))
+                            ProgressView(value: Float(totalTimeDone + taskTimer.progress), total: Float(totalTimeComputed.getTotal()))
                                 .padding(.leading, 15)
                                 .tint(K.Colors.tab)
                                 .animation(.easeOut, value: totalTimeDone)
@@ -96,13 +100,45 @@ struct TimerView: View {
                         Button{
                             completed = !completed
                         } label: {
-                            Image(systemName: completed || totalTimeDone + taskTimer.progress >= task.time ?  "checkmark.circle.fill" : "checkmark.circle")
+                            Image(systemName: completed || totalTimeDone + taskTimer.progress >= totalTimeComputed.getTotal() ?  "checkmark.circle.fill" : "checkmark.circle")
                                 .foregroundColor(K.Colors.tab)
                                 .padding()
                         }
-                        
-                        
                     }
+                    HStack{
+                        Spacer()
+                        Button{
+                            //minus for hours
+                            totalTimeComputed.subTime(mins: 60)
+                        } label: {
+                            Image(systemName: "minus.circle")
+                        }
+                        Text("\(totalTimeComputed.totalHours) hrs")
+                        Button{
+                            //add for hours
+                            totalTimeComputed.addTime(mins: 60)
+                            completed = false
+                        } label: {
+                            Image(systemName: "plus.circle")
+                        }
+                        Spacer()
+                        Button{
+                            //minus for mins
+                            totalTimeComputed.subTime(mins: 5)
+                        } label: {
+                            Image(systemName: "minus.circle")
+                        }
+                        Text("\(totalTimeComputed.totalMins) mins")
+                        Button{
+                            //add for mins
+                            totalTimeComputed.addTime(mins: 5)
+                            completed = false
+                        } label: {
+                            Image(systemName: "plus.circle")
+                        }
+                        Spacer()
+                    }
+                    .foregroundColor(K.Colors.text)
                     Spacer()
                     Button("Finish Session"){
                         //if completed is true set task.time to equal task.timeDone
@@ -114,6 +150,14 @@ struct TimerView: View {
                             }catch{
                                 print("error updating data, \(error)")
                             }
+                        }
+                        do{
+                            try realm.write{
+                                task.thaw()?.time = totalTimeComputed.getTotal()
+                            }
+                        }
+                        catch{
+                            print("error updating data, \(error)")
                         }
                         updateTimeDone()
                         taskTimer.clearStartTime()

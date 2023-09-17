@@ -23,6 +23,7 @@
 		302AB16C2AAE1A700061D11A /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB16B2AAE1A700061D11A /* CircularProgressBar.swift */; };
 		302AB16E2AB2113C0061D11A /* TaskTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB16D2AB2113C0061D11A /* TaskTimer.swift */; };
 		302AB1702AB613180061D11A /* TimeSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB16F2AB613180061D11A /* TimeSaved.swift */; };
+		302AB1722AB70EAA0061D11A /* TotalTimeComputed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB1712AB70EAA0061D11A /* TotalTimeComputed.swift */; };
 		30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */; };
 		30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* CalendarView.swift */; };
 		30D38C752AA4A31F00509C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C742AA4A31F00509C21 /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		302AB16B2AAE1A700061D11A /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
 		302AB16D2AB2113C0061D11A /* TaskTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTimer.swift; sourceTree = "<group>"; };
 		302AB16F2AB613180061D11A /* TimeSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSaved.swift; sourceTree = "<group>"; };
+		302AB1712AB70EAA0061D11A /* TotalTimeComputed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalTimeComputed.swift; sourceTree = "<group>"; };
 		30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdapSchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapSchAppApp.swift; sourceTree = "<group>"; };
 		30D38C722AA4A31E00509C21 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				302AB1652AA9BFDB0061D11A /* UIColorExtensions.swift */,
 				302AB16D2AB2113C0061D11A /* TaskTimer.swift */,
 				302AB16F2AB613180061D11A /* TimeSaved.swift */,
+				302AB1712AB70EAA0061D11A /* TotalTimeComputed.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */,
 				302AB15C2AA7C86D0061D11A /* DateExtensions.swift in Sources */,
 				301AD5982AA70870006DA899 /* Downtime.swift in Sources */,
+				302AB1722AB70EAA0061D11A /* TotalTimeComputed.swift in Sources */,
 				30D38C862AA4AD7700509C21 /* K.swift in Sources */,
 				30D38C802AA4A64300509C21 /* ContentView.swift in Sources */,
 				30D38C822AA4A78500509C21 /* TaskView.swift in Sources */,
