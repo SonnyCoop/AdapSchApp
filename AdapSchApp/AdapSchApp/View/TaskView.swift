@@ -22,16 +22,15 @@ struct TaskView: View {
     var sortedTasks: [Task] {
         switch sortingChoice {
         case .parentCategory:
-            let sortedTask = tasks.sorted { lhs, rhs in
+            return tasks.sorted { lhs, rhs in
                 if (lhs.parentCategory.first?.color[0])! == (rhs.parentCategory.first?.color[0])! {
                     return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
                 }
                 return (lhs.parentCategory.first?.color[0])! > (rhs.parentCategory.first?.color[0])!
             }
-            return sortedTask
-            
+
         case .dueDate:
-            let sortedTask = tasks.sorted { lhs, rhs in
+            return tasks.sorted { lhs, rhs in
                 if lhs.weekTask == rhs.weekTask{
                     if Calendar.current.isDate(lhs.dueDate, equalTo: rhs.dueDate, toGranularity: .day){
                         return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
@@ -42,10 +41,9 @@ struct TaskView: View {
                 }
                 return !lhs.weekTask
             }
-            return sortedTask
-            
+
         case .progress:
-            let sortedTask = tasks.sorted { lhs, rhs in
+            return tasks.sorted { lhs, rhs in
                 if lhs.time == 0{
                     return true
                 }
@@ -57,10 +55,9 @@ struct TaskView: View {
                 }
                 return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
             }
-            return sortedTask
 
         case .individualTask:
-            let sortedTask = tasks.sorted { lhs, rhs in
+            return tasks.sorted { lhs, rhs in
                 if lhs.weekTask == rhs.weekTask {
                     if ((lhs.parentCategory.first?.color[0])! == (rhs.parentCategory.first?.color[0])!){
                         return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
@@ -71,7 +68,6 @@ struct TaskView: View {
                 }
                 return !lhs.weekTask
             }
-            return sortedTask
         }
     }
     

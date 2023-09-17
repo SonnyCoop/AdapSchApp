@@ -102,8 +102,11 @@ struct AddTaskView: View {
                                         Text("\(cat.title)")
                                             .tag(cat.title)
                                     }
-                                    Text("Add Category +")
-                                        .tag("add category")
+                                    if categories.count != 11{
+                                        Text("Add Category +")
+                                            .tag("add category")
+                                    }
+                                    
                                 }.onChange(of: category, perform: { newValue in
                                     if newValue == "add category"{
                                         showingAlert = true

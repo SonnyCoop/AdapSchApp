@@ -49,6 +49,7 @@ struct TaskItemCell: View {
                 ProgressView(value: Float(task.timeDone), total: Float(task.time))
                     .frame(maxHeight: .infinity)
                     .padding(.horizontal, 10)
+                    .tint(K.Colors.tab)
             }
             
         }
