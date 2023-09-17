@@ -90,16 +90,18 @@ struct TimerView: View {
                         }
                         else{
                             ProgressView(value: Float(totalTimeDone + taskTimer.progress), total: Float(totalTimeComputed.getTotal()))
-                                .padding(.leading, 15)
+                                .padding(15)
                                 .tint(K.Colors.tab)
                                 .animation(.easeOut, value: totalTimeDone)
                         }
-                        Button{
-                            completed = !completed
-                        } label: {
-                            Image(systemName: completed || totalTimeDone + taskTimer.progress >= totalTimeComputed.getTotal() ?  "checkmark.circle.fill" : "checkmark.circle")
-                                .foregroundColor(K.Colors.tab)
-                                .padding()
+                        if !task.weekTask{
+                            Button{
+                                completed = !completed
+                            } label: {
+                                Image(systemName: completed || totalTimeDone + taskTimer.progress >= totalTimeComputed.getTotal() ?  "checkmark.circle.fill" : "checkmark.circle")
+                                    .foregroundColor(K.Colors.tab)
+                                    .padding(.trailing, 15)
+                            }
                         }
                     }
                     if !task.weekTask{
@@ -145,8 +147,9 @@ struct TimerView: View {
                         //if completed is true set task.time to equal task.timeDone
                         if completed {
                             do{
+                                print("enter")
                                 try realm.write{
-                                    task.thaw()?.time = totalTimeDone
+                                    task.thaw()?.time = totalTimeComputed.getTotal()
                                 }
                             }catch{
                                 print("error updating data, \(error)")
