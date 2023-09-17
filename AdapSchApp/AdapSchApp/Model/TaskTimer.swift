@@ -33,10 +33,7 @@ class TaskTimer: ObservableObject {
         self.sessionBlock = sessionBlock
         self.time = sessionBlock
         startTime = fetchStartTime()
-
-        if startTime != nil {
-            start()
-        }
+        initialiseTimer()
     }
 }
 
@@ -56,6 +53,24 @@ extension TaskTimer {
         pauseTime = Date()
         wasPaused = true
         setPauseTime()
+    }
+    
+    func initialiseTimer(){
+        if !wasPaused{
+            start()
+        }
+        else{
+            if let originalTime = startTime{
+                time = sessionBlock - Int(pauseTime - originalTime)
+                if time < 0{
+                    time = time * -1
+                }
+                self.message = updateTimer()
+            }
+            else{
+                print("error initialising timer")
+            }
+        }
     }
     
     //runs each second
@@ -128,6 +143,10 @@ extension TaskTimer {
         }catch{
             print("error encoding item array, \(error)")
         }
+    }
+    
+    func isPaused() -> Bool {
+        return wasPaused
     }
 }
 

@@ -15,7 +15,6 @@ struct TaskItemCell: View {
     //when true timer screen is shown
     @State private var isPresented: Bool = false
     @Environment(\.colorScheme) var darkMode
-    @Environment(\.scenePhase) var scenePhase
     
     let realm = try! Realm()
     

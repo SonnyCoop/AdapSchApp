@@ -25,6 +25,7 @@ struct TimerView: View {
         _timeBlock = State(initialValue: timeBlock)
         _totalTimeDone = State(initialValue: totalTimeDone)
         self.taskTimer = TaskTimer(sessionBlock: timeBlock)
+        self.paused = taskTimer.isPaused()
     }
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
