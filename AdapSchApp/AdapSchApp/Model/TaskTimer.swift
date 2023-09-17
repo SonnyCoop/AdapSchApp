@@ -40,9 +40,6 @@ class TaskTimer: ObservableObject {
 //MARK: - stop watch functionality
 extension TaskTimer {
     func start(){
-        if startTime == nil {
-            startTime = fetchStartTime()
-        }
         fire()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fire), userInfo: nil, repeats: true)
         
@@ -95,6 +92,7 @@ extension TaskTimer {
             time = sessionBlock - elapsed
         }
         
+        //if in overtime and app enters the background
         if time < 0{
             time = time * -1
             overtime = true
@@ -104,7 +102,7 @@ extension TaskTimer {
     }
     
     func updateTimer() -> String{
-      
+        //the actual total of mins
         progress = Int(Date() - startTime!) / 60
         
         let totalHrs = time / 3600
@@ -143,16 +141,6 @@ extension TaskTimer {
         }
     }
     
-    func clearStartTime(){
-        let encoder = PropertyListEncoder()
-        do{
-            let data = try encoder.encode(TimeSaved(startTime: nil))
-            try data.write(to: dataFilePath!)
-        }catch{
-            print("error encoding item array, \(error)")
-        }
-    }
-    
     func isPaused() -> Bool {
         return wasPaused
     }
@@ -188,6 +176,16 @@ extension TaskTimer {
         }
         saveStartTime()
         return Date()
+    }
+    
+    func clearStartTime(){
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(TimeSaved(startTime: nil))
+            try data.write(to: dataFilePath!)
+        }catch{
+            print("error encoding item array, \(error)")
+        }
     }
     
     func setPauseTime(){

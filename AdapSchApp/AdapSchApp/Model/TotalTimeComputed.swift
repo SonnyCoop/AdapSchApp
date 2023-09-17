@@ -8,8 +8,11 @@
 import Foundation
 class TotalTimeComputed: ObservableObject{
     var task: Task
+    ///variables which change on the view
     @Published private(set) var totalHours: Int = 0
     @Published private(set) var totalMins: Int = 0
+    
+    ///computed property to work out total mins and hours
     private var totalTime: Int {
         get{
             return task.time
@@ -19,6 +22,7 @@ class TotalTimeComputed: ObservableObject{
             totalMins = newValue % 60
         }
     }
+    
     init(task: Task){
         self.task = task
         self.totalTime = task.time

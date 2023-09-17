@@ -93,7 +93,6 @@ struct AddTaskView: View {
                                 HStack{
                                     Text("Title:")
                                     TextField("Enter title", text: $title)
-//                                        .foregroundColor(K.Colors.text)
                                         .textInputAutocapitalization(.words)
                                 }
                                 //category picker

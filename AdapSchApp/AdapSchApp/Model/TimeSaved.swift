@@ -6,6 +6,7 @@
 //
 
 import Foundation
+///what is saved to the plist
 struct TimeSaved: Codable {
     var startTime: Date? = Date()
     var pauseTime: Date = Date()
