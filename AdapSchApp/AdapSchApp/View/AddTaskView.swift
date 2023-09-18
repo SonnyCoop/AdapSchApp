@@ -28,13 +28,15 @@ struct AddTaskView: View {
     @State private var newCategory = ""
     @State private var advanced = false
     
+    private var task: Task? = nil
+    
     //day picker object
     private var dayPicker = DayPicker()
 
     //setting up realm
     let realm = try! Realm()
     @ObservedResults(Category.self) var categories
-//    @ObservedResults(Task.self) var tasks
+    @ObservedResults(Task.self) var tasks
     @ObservedResults(Downtime.self) var downtimes
     
     @Environment(\.dismiss) private var dismiss
@@ -50,6 +52,33 @@ struct AddTaskView: View {
             noCat.color.append(K.categoryBoxColors[categories.count].1)
             $categories.append(noCat)
         }
+
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(K.Colors.text)]
+    }
+    
+    init(task: Task){
+        self.task = task
+        _title = State(initialValue: task.title)
+        _hours = State(initialValue: (task.time / 60))
+        _minutes = State(initialValue: (task.time % 60))
+        _dueDate = State(initialValue: task.dueDate)
+        _blockHours = State(initialValue: (task.blockLenghts / 60))
+        _blockMins = State(initialValue: (task.blockLenghts % 60))
+        _priority = State(initialValue: Double(task.priority))
+        _timeOfDay = State(initialValue: task.timeOfDay)
+        if task.weekTask{
+            _selectedScreen = State(initialValue: "weekly")
+        }
+        else{
+            _selectedScreen = State(initialValue: "daily")
+        }
+        let parentCategory = task.parentCategory
+        if let category = parentCategory.first?.title {
+            _category = State(initialValue: category)
+        }
+        
+        
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(K.Colors.text)]
     }
     
     var body: some View {
@@ -71,21 +100,24 @@ struct AddTaskView: View {
                                     return "Downtime"
                                 }
                             }
-                            Text(title)
-                                .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
-                                .frame(maxWidth: . infinity, maxHeight: .infinity)
-                                .multilineTextAlignment(.center)
-                                .background(selectedScreen == screen ? K.Colors.tab : K.Colors.background1)
-                                .foregroundStyle(K.Colors.text)
-                                .cornerRadius(25)
-                                .overlay(RoundedRectangle(cornerRadius: 25).stroke(K.Colors.background2, lineWidth: 2))
-                                .onTapGesture {
-                                    selectedScreen = screen
-                                }
-                            
+                            if title != "Downtime" || task == nil{
+                                Text(title)
+                                    .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+                                    .frame(maxWidth: . infinity, maxHeight: .infinity)
+                                    .multilineTextAlignment(.center)
+                                    .background(selectedScreen == screen ? K.Colors.tab : K.Colors.background1)
+                                    .foregroundStyle(K.Colors.text)
+                                    .cornerRadius(25)
+                                    .overlay(RoundedRectangle(cornerRadius: 25).stroke(K.Colors.background2, lineWidth: 2))
+                                    .onTapGesture {
+                                        selectedScreen = screen
+                                    }
+                            }
                         }
                     }.frame(maxHeight: 80)
                     
+                        .navigationBarTitle(Text(task == nil ? "Add Task" : "Edit \(task!.title)"), displayMode: .inline)
+                        
                     Form{
                         Section{
                             //MARK: - Daily display
@@ -326,8 +358,13 @@ struct AddTaskView: View {
                     .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)})
                     
                     Spacer()
-                    Button("Add"){
-                        addTask()
+                    Button(task == nil ? "Add" : "Save"){
+                        if task == nil{
+                            addTask()
+                        }
+                        else{
+                            saveTask()
+                        }
                     }
                     .buttonStyle(CustomButton())
                 }
@@ -411,6 +448,45 @@ struct AddTaskView: View {
             downtime.start = startTime
             downtime.end = endTime
             $downtimes.append(downtime)
+        }
+        
+        //closing window
+        dismiss()
+    }
+    
+    func saveTask() {
+        
+        //creating replica
+        let newTask = Task()
+        newTask.title = title
+        newTask.time = hours * 60 + minutes
+        newTask.blockLenghts = blockHours * 60 + blockMins
+        newTask.timeOfDay = timeOfDay
+        newTask.timeDone = task?.timeDone ?? 0
+        if selectedScreen == "weekly"{
+            newTask.dueDate = Date.today().next(.monday)
+            newTask.weekTask = true
+            newTask.priority = 3
+        }
+        else{
+            newTask.dueDate = dueDate
+            newTask.priority = Int(priority)
+            newTask.weekTask = false
+        }
+        
+        let selectCat = realm.object(ofType: Category.self, forPrimaryKey: category)
+        
+        //adding to database
+        do{
+            try realm.write {
+                selectCat?.tasks.append(newTask)
+                if let deleteTask = task {
+                    realm.delete(realm.objects(Task.self).filter("id=%@",deleteTask.id))
+                }
+                
+            }
+        }catch{
+            print("error updating data, \(error)")
         }
         
         //closing window

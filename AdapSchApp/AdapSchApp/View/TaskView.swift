@@ -13,6 +13,8 @@ struct TaskView: View {
     @State private var isPresented: Bool = false
     @State private var sortingChoice: SortingChoice = .parentCategory
     
+    @State private var isEditing: Bool = false
+    
     enum SortingChoice: String, CaseIterable, Identifiable {
         case parentCategory, dueDate, progress, individualTask
         var id: Self { self }
@@ -94,15 +96,19 @@ struct TaskView: View {
                 }
                 .modifier(FormHiddenBackground())
                 .listStyle(.plain)
+                .environment(\.editMode, .constant(self.isEditing ? EditMode.active : EditMode.inactive)).animation(Animation.spring(), value: 1)
                 
                 //MARK: - Navigation Tab Setup
                     .toolbarBackground(K.Colors.tab, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button("Edit") {
-                                //edit code here
-                            }.tint(K.Colors.text)
+                            Button(action: {
+                                self.isEditing.toggle()
+                            }) {
+                                Text(isEditing ? "Done" : "Edit")
+                            }
+                            .tint(K.Colors.text)
                         }
                         //picking sorting option
                         ToolbarItem(placement: .navigationBarTrailing) {
