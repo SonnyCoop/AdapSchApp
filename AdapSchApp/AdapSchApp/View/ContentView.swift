@@ -6,14 +6,19 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct ContentView: View {
+    let realm = try! Realm()
+    @ObservedResults(Task.self) var tasks
+    
     //upon creation set the tab bar to the appropriate colours
     init(){
         UITabBar.appearance().backgroundColor = UIColor(K.Colors.tab)
         UITabBar.appearance().unselectedItemTintColor = UIColor(K.Colors.text)
         UITabBar.appearance().barTintColor = UIColor(K.Colors.tab)
         clearTimers()
+        refreshWeeklyTasks()
     }
     
     //set the default screen to calendar
@@ -62,15 +67,22 @@ struct ContentView: View {
         }
     }
     
+    func refreshWeeklyTasks(){
+        for task in tasks {
+            if task.weekTask && task.dueDate < Date() {
+                do{
+                    try realm.write{
+                        task.dueDate = Date.today().next(.monday)
+                        task.timeDone = 0
+                    }
+                }catch{
+                    print("error updating data, \(error)")
+                }
+            }
+        }
+    }
+    
 }
-
-//#if canImport(UIKit)
-//extension View {
-//    func hideKeyboard() {
-//        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//    }
-//}
-//#endif
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

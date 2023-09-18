@@ -13,6 +13,8 @@ struct TaskView: View {
     @State private var isPresented: Bool = false
     @State private var sortingChoice: SortingChoice = .parentCategory
     
+    @State private var isEditing: Bool = false
+    
     enum SortingChoice: String, CaseIterable, Identifiable {
         case parentCategory, dueDate, progress, individualTask
         var id: Self { self }
@@ -22,13 +24,52 @@ struct TaskView: View {
     var sortedTasks: [Task] {
         switch sortingChoice {
         case .parentCategory:
-            return tasks.sorted { ($0.parentCategory.first?.color[0])! < ($1.parentCategory.first?.color[0])!}
+            return tasks.sorted { lhs, rhs in
+                if (lhs.parentCategory.first?.color[0])! == (rhs.parentCategory.first?.color[0])! {
+                    return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
+                }
+                return (lhs.parentCategory.first?.color[0])! > (rhs.parentCategory.first?.color[0])!
+            }
+
         case .dueDate:
-            return (tasks.sorted { (!$0.weekTask && $1.weekTask) || ($0.weekTask && !$1.weekTask) }).sorted { ($0.dueDate < $1.dueDate) || $1.weekTask  }
+            return tasks.sorted { lhs, rhs in
+                if lhs.weekTask == rhs.weekTask{
+                    if Calendar.current.isDate(lhs.dueDate, equalTo: rhs.dueDate, toGranularity: .day){
+                        return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
+                    }
+                    else{
+                        return lhs.dueDate < rhs.dueDate
+                    }
+                }
+                return !lhs.weekTask
+            }
+
         case .progress:
-            return tasks.sorted { !($0.time == 0 ? false : ($1.time == 0 ? true : ($0.timeDone / $0.time) > $1.timeDone / $1.time)) }
+            return tasks.sorted { lhs, rhs in
+                if lhs.time == 0{
+                    return true
+                }
+                else if rhs.time == 0 {
+                    return false
+                }
+                else if lhs.timeDone == 0 && rhs.timeDone == 0 {
+                    return ((lhs.parentCategory.first?.color[0])! > (rhs.parentCategory.first?.color[0])!)
+                }
+                return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
+            }
+
         case .individualTask:
-            return tasks.sorted { (!$0.weekTask && $1.weekTask) || ($0.weekTask && !$1.weekTask) }
+            return tasks.sorted { lhs, rhs in
+                if lhs.weekTask == rhs.weekTask {
+                    if ((lhs.parentCategory.first?.color[0])! == (rhs.parentCategory.first?.color[0])!){
+                        return (Float(lhs.timeDone) / Float(lhs.time)) > (Float(rhs.timeDone) / Float(rhs.time))
+                    }
+                    else{
+                        return ((lhs.parentCategory.first?.color[0])! > (rhs.parentCategory.first?.color[0])!)
+                    }
+                }
+                return !lhs.weekTask
+            }
         }
     }
     
@@ -55,15 +96,19 @@ struct TaskView: View {
                 }
                 .modifier(FormHiddenBackground())
                 .listStyle(.plain)
+                .environment(\.editMode, .constant(self.isEditing ? EditMode.active : EditMode.inactive)).animation(Animation.spring(), value: 1)
                 
                 //MARK: - Navigation Tab Setup
                     .toolbarBackground(K.Colors.tab, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button("Edit") {
-                                //edit code here
-                            }.tint(K.Colors.text)
+                            Button(action: {
+                                self.isEditing.toggle()
+                            }) {
+                                Text(isEditing ? "Done" : "Edit")
+                            }
+                            .tint(K.Colors.text)
                         }
                         //picking sorting option
                         ToolbarItem(placement: .navigationBarTrailing) {

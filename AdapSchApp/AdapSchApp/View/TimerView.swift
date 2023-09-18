@@ -32,8 +32,6 @@ struct TimerView: View {
         self.paused = taskTimer.isPaused()
     }
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
     @State private var completed: Bool = false
     
     //add for different timers e.g. 25-5 timer
@@ -46,7 +44,6 @@ struct TimerView: View {
     
     //realm setup
     let realm = try! Realm()
-    @ObservedResults(Task.self) var tasks
     
     var body: some View {
         NavigationView{
@@ -93,59 +90,66 @@ struct TimerView: View {
                         }
                         else{
                             ProgressView(value: Float(totalTimeDone + taskTimer.progress), total: Float(totalTimeComputed.getTotal()))
-                                .padding(.leading, 15)
+                                .padding(15)
                                 .tint(K.Colors.tab)
                                 .animation(.easeOut, value: totalTimeDone)
                         }
-                        Button{
-                            completed = !completed
-                        } label: {
-                            Image(systemName: completed || totalTimeDone + taskTimer.progress >= totalTimeComputed.getTotal() ?  "checkmark.circle.fill" : "checkmark.circle")
-                                .foregroundColor(K.Colors.tab)
-                                .padding()
+                        if !task.weekTask{
+                            Button{
+                                completed = !completed
+                            } label: {
+                                Image(systemName: completed || totalTimeDone + taskTimer.progress >= totalTimeComputed.getTotal() ?  "checkmark.circle.fill" : "checkmark.circle")
+                                    .foregroundColor(K.Colors.tab)
+                                    .padding(.trailing, 15)
+                            }
                         }
                     }
-                    HStack{
-                        Spacer()
-                        Button{
-                            //minus for hours
-                            totalTimeComputed.subTime(mins: 60)
-                        } label: {
-                            Image(systemName: "minus.circle")
+                    if !task.weekTask{
+                        HStack{
+                            Spacer()
+                            Button{
+                                //minus for hours
+                                totalTimeComputed.subTime(mins: 60)
+                            } label: {
+                                Image(systemName: "minus.circle")
+                            }
+                            Text("\(totalTimeComputed.totalHours) hrs")
+                            Button{
+                                //add for hours
+                                totalTimeComputed.addTime(mins: 60)
+                                completed = false
+                            } label: {
+                                Image(systemName: "plus.circle")
+                            }
+                            Spacer()
+                            Button{
+                                //minus for mins
+                                totalTimeComputed.subTime(mins: 5)
+                            } label: {
+                                Image(systemName: "minus.circle")
+                            }
+                            Text("\(totalTimeComputed.totalMins) mins")
+                            Button{
+                                //add for mins
+                                totalTimeComputed.addTime(mins: 5)
+                                completed = false
+                            } label: {
+                                Image(systemName: "plus.circle")
+                            }
+                            Spacer()
                         }
-                        Text("\(totalTimeComputed.totalHours) hrs")
-                        Button{
-                            //add for hours
-                            totalTimeComputed.addTime(mins: 60)
-                            completed = false
-                        } label: {
-                            Image(systemName: "plus.circle")
-                        }
-                        Spacer()
-                        Button{
-                            //minus for mins
-                            totalTimeComputed.subTime(mins: 5)
-                        } label: {
-                            Image(systemName: "minus.circle")
-                        }
-                        Text("\(totalTimeComputed.totalMins) mins")
-                        Button{
-                            //add for mins
-                            totalTimeComputed.addTime(mins: 5)
-                            completed = false
-                        } label: {
-                            Image(systemName: "plus.circle")
-                        }
-                        Spacer()
+                        .foregroundColor(K.Colors.text)
                     }
-                    .foregroundColor(K.Colors.text)
+                    
                     Spacer()
+                    //MARK: - Finish/Cancel
                     Button("Finish Session"){
                         //if completed is true set task.time to equal task.timeDone
                         if completed {
                             do{
+                                print("enter")
                                 try realm.write{
-                                    task.thaw()?.time = totalTimeDone
+                                    task.thaw()?.time = totalTimeComputed.getTotal()
                                 }
                             }catch{
                                 print("error updating data, \(error)")

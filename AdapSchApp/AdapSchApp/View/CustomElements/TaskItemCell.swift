@@ -15,6 +15,7 @@ struct TaskItemCell: View {
     //when true timer screen is shown
     @State private var isPresented: Bool = false
     @Environment(\.colorScheme) var darkMode
+    @Environment(\.editMode) private var editMode
     
     let realm = try! Realm()
     
@@ -41,14 +42,22 @@ struct TaskItemCell: View {
             .padding(.leading, 10)
             
             //progress bar
-            if task.timeDone >= task.time {
-                Text("Completed")
-                    .padding(.horizontal, 10)
+            if editMode?.wrappedValue.isEditing == false{
+                if task.timeDone >= task.time {
+                    Text("Completed")
+                        .padding(.horizontal, 10)
+                }
+                else{
+                    ProgressView(value: Float(task.timeDone), total: Float(task.time))
+                        .frame(maxHeight: .infinity)
+                        .padding(.horizontal, 10)
+                        .tint(K.Colors.tab)
+                }
             }
-            else{
-                ProgressView(value: Float(task.timeDone), total: Float(task.time))
-                    .frame(maxHeight: .infinity)
-                    .padding(.horizontal, 10)
+            else {
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .padding(.trailing, 15)
             }
             
         }
@@ -66,8 +75,13 @@ struct TaskItemCell: View {
         
         //when true timer slides up
         .sheet(isPresented: $isPresented, content: {
-            TimerView(task: task, timeBlock: task.blockLenghts * 60, totalTimeDone: task.timeDone )
-                .interactiveDismissDisabled()
+            if editMode?.wrappedValue.isEditing == true {
+                AddTaskView(task: task)
+                    .interactiveDismissDisabled()
+            } else {
+                TimerView(task: task, timeBlock: 0, totalTimeDone: task.timeDone )
+                    .interactiveDismissDisabled()
+            }
         })
     }
 }
