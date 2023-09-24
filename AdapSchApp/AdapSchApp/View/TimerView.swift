@@ -227,7 +227,6 @@ struct TimerView: View {
     func findTask(id: String) -> Task{
         for possTask in tasks {
             if possTask.id.stringValue == id{
-                print(possTask.title)
                 return possTask
             }
         }
