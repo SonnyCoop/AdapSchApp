@@ -15,6 +15,7 @@ class TaskTimer: ObservableObject {
 
     /// Is the timer running?
     @Published private(set) var progress = 0
+    private let taskId : String
 
     /// Time that we're counting from
     private var startTime: Date? = nil
@@ -22,6 +23,7 @@ class TaskTimer: ObservableObject {
     private var wasPaused = false
     private var sessionBlock: Int
     private var time: Int
+    
 
     /// The timer
     private var timer = Timer()
@@ -29,9 +31,10 @@ class TaskTimer: ObservableObject {
     ///  Whether the time session is officially finished
     private var overtime = false
 
-    init(sessionBlock: Int) {
+    init(sessionBlock: Int, taskId: String) {
         self.sessionBlock = sessionBlock
         self.time = sessionBlock
+        self.taskId = taskId
         startTime = fetchStartTime()
         initialiseTimer()
     }
@@ -151,7 +154,7 @@ extension TaskTimer {
     func saveStartTime(){
         let encoder = PropertyListEncoder()
         do{
-            let data = try encoder.encode(TimeSaved())
+            let data = try encoder.encode(TimeSaved(taskId: taskId, timeBlock: sessionBlock))
             try data.write(to: dataFilePath!)
         }catch{
             print("error encoding item array, \(error)")
@@ -167,7 +170,9 @@ extension TaskTimer {
                 if let timeSaved = dataRetrived.startTime{
                     pauseTime = dataRetrived.pauseTime
                     wasPaused = dataRetrived.paused
-                    return timeSaved
+                    if dataRetrived.taskId != ""{
+                        return timeSaved
+                    }
                 }
             }catch{
                 print("error decoding item array, \(error)")
@@ -191,7 +196,7 @@ extension TaskTimer {
     func setPauseTime(){
         let encoder = PropertyListEncoder()
         do{
-            let data = try encoder.encode(TimeSaved(startTime: startTime, pauseTime: pauseTime, paused: wasPaused))
+            let data = try encoder.encode(TimeSaved(taskId: taskId, startTime: startTime, pauseTime: pauseTime, paused: wasPaused, timeBlock: sessionBlock))
             try data.write(to: dataFilePath!)
         }catch{
             print("error encoding item array, \(error)")

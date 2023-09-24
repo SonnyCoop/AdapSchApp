@@ -24,6 +24,8 @@
 		302AB16E2AB2113C0061D11A /* TaskTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB16D2AB2113C0061D11A /* TaskTimer.swift */; };
 		302AB1702AB613180061D11A /* TimeSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB16F2AB613180061D11A /* TimeSaved.swift */; };
 		302AB1722AB70EAA0061D11A /* TotalTimeComputed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB1712AB70EAA0061D11A /* TotalTimeComputed.swift */; };
+		302AB1742AB86E530061D11A /* AddRemoveCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB1732AB86E530061D11A /* AddRemoveCategories.swift */; };
+		302AB1762AB86F270061D11A /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302AB1752AB86F270061D11A /* CategoriesView.swift */; };
 		30D38C712AA4A31E00509C21 /* AdapSchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */; };
 		30D38C732AA4A31E00509C21 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D38C722AA4A31E00509C21 /* CalendarView.swift */; };
 		30D38C752AA4A31F00509C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D38C742AA4A31F00509C21 /* Assets.xcassets */; };
@@ -52,6 +54,8 @@
 		302AB16D2AB2113C0061D11A /* TaskTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTimer.swift; sourceTree = "<group>"; };
 		302AB16F2AB613180061D11A /* TimeSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSaved.swift; sourceTree = "<group>"; };
 		302AB1712AB70EAA0061D11A /* TotalTimeComputed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalTimeComputed.swift; sourceTree = "<group>"; };
+		302AB1732AB86E530061D11A /* AddRemoveCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRemoveCategories.swift; sourceTree = "<group>"; };
+		302AB1752AB86F270061D11A /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		30D38C6D2AA4A31E00509C21 /* AdapSchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdapSchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30D38C702AA4A31E00509C21 /* AdapSchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapSchAppApp.swift; sourceTree = "<group>"; };
 		30D38C722AA4A31E00509C21 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -102,6 +106,7 @@
 				302AB1612AA9033E0061D11A /* AdvancedButton.swift */,
 				302AB1672AABA7540061D11A /* TaskItemCell.swift */,
 				302AB16B2AAE1A700061D11A /* CircularProgressBar.swift */,
+				302AB1732AB86E530061D11A /* AddRemoveCategories.swift */,
 			);
 			path = CustomElements;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 				300D80D92AA5B65A0014B284 /* Settings */,
 				30D38C892AA4E9F000509C21 /* AddTaskView.swift */,
 				302AB1692AABA9520061D11A /* TimerView.swift */,
+				302AB1752AB86F270061D11A /* CategoriesView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -244,7 +250,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				30D38C882AA4D97400509C21 /* DarkModeSettings.swift in Sources */,
+				302AB1742AB86E530061D11A /* AddRemoveCategories.swift in Sources */,
 				302AB1622AA9033E0061D11A /* AdvancedButton.swift in Sources */,
+				302AB1762AB86F270061D11A /* CategoriesView.swift in Sources */,
 				30D38C842AA4A7C100509C21 /* SettingsView.swift in Sources */,
 				302AB15E2AA7C8F70061D11A /* FormHiddenBackground.swift in Sources */,
 				300D80D02AA5129A0014B284 /* Task.swift in Sources */,

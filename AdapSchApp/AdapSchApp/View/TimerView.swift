@@ -9,25 +9,46 @@ import SwiftUI
 import RealmSwift
 
 struct TimerView: View {
-    let task: Task
+    var task: Task = Task()
+    
+    /// where the start time is saved
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TimesSaved.plist")
+    
     //task.blockLengths in seconds
-    @State var timeBlock: Int
-    @State var totalTimeDone: Int
+    @State var timeBlock: Int = 0
+    @State var totalTimeDone: Int = 0
 
     //timer variables
     @State private var timerType: TimerType = .regular
     @State private var paused: Bool = false
     @State private var overtime: Bool = false
-    @ObservedObject private var taskTimer: TaskTimer
+    @ObservedObject private var taskTimer: TaskTimer = TaskTimer(sessionBlock: 0, taskId: "")
     
     //total time hours and mins
-    @ObservedObject private var totalTimeComputed: TotalTimeComputed
+    @ObservedObject private var totalTimeComputed: TotalTimeComputed = TotalTimeComputed(task: Task())
+    
+    init(){
+        //change this to fetch from plist
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            let dataRetrived = try! decoder.decode(TimeSaved.self, from: data)
+            if let timeSaved = dataRetrived.startTime{
+                let tempTask = findTask(id: dataRetrived.taskId)
+                self.task = tempTask
+                _timeBlock = State(initialValue: dataRetrived.timeBlock)
+                _totalTimeDone = State(initialValue: self.task.timeDone)
+                self.taskTimer = TaskTimer(sessionBlock: dataRetrived.timeBlock, taskId: tempTask.id.stringValue)
+                totalTimeComputed = TotalTimeComputed(task: tempTask)
+                self.paused = taskTimer.isPaused()
+            }
+        }
+    }
     
     init(task: Task, timeBlock: Int, totalTimeDone: Int) {
         self.task = task
         _timeBlock = State(initialValue: timeBlock)
         _totalTimeDone = State(initialValue: totalTimeDone)
-        self.taskTimer = TaskTimer(sessionBlock: timeBlock)
+        self.taskTimer = TaskTimer(sessionBlock: timeBlock, taskId: task.id.stringValue)
         totalTimeComputed = TotalTimeComputed(task: task)
         self.paused = taskTimer.isPaused()
     }
@@ -44,6 +65,7 @@ struct TimerView: View {
     
     //realm setup
     let realm = try! Realm()
+    @ObservedResults(Task.self) var tasks
     
     var body: some View {
         NavigationView{
@@ -200,6 +222,16 @@ struct TimerView: View {
         }catch{
             print("error updating data, \(error)")
         }
+    }
+    
+    func findTask(id: String) -> Task{
+        for possTask in tasks {
+            if possTask.id.stringValue == id{
+                print(possTask.title)
+                return possTask
+            }
+        }
+        return Task()
     }
 }
 

@@ -15,6 +15,13 @@ struct TaskView: View {
     
     @State private var isEditing: Bool = false
     
+    @State private var timerIsPresented: Bool = false
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TimesSaved.plist")
+    
+    init(){
+        _timerIsPresented = State(initialValue: refreshTimers())
+    }
+    
     enum SortingChoice: String, CaseIterable, Identifiable {
         case parentCategory, dueDate, progress, individualTask
         var id: Self { self }
@@ -86,6 +93,9 @@ struct TaskView: View {
                 //adding all the items
                 List{
                     Section{
+                        if isEditing{
+                            AddRemoveCategories()
+                        }
                         ForEach(sortedTasks, id: \.self) { task in
                             TaskItemCell(task: task, background: getBackground(task: task))
                         }
@@ -136,6 +146,11 @@ struct TaskView: View {
                     .interactiveDismissDisabled()
             })
             
+            .sheet(isPresented: $timerIsPresented, content: {
+                TimerView()
+                    .interactiveDismissDisabled()
+            })
+            
         }
     }
     
@@ -158,6 +173,24 @@ struct TaskView: View {
             return Array(colors)
         }
         return ["#ffffff","#ffffff"]
+    }
+    
+    func refreshTimers() -> Bool{
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do{
+                let dataRetrived = try decoder.decode(TimeSaved.self, from: data)
+                if dataRetrived.startTime != nil{
+                    return true
+                }
+            }catch{
+                print("error decoding item array, \(error)")
+            }
+        }
+        else{
+            print("here")
+        }
+        return false
     }
 }
 
