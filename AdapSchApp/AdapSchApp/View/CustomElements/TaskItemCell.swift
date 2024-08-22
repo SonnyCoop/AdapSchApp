@@ -79,7 +79,7 @@ struct TaskItemCell: View {
                 AddTaskView(task: task)
                     .interactiveDismissDisabled()
             } else {
-                TimerView(task: task, timeBlock: 0, totalTimeDone: task.timeDone )
+                TimerView(task: task, timeBlock: task.blockLenghts * 60, totalTimeDone: task.timeDone )
                     .interactiveDismissDisabled()
             }
         })
