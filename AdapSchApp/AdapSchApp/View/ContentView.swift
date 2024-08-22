@@ -22,12 +22,12 @@ struct ContentView: View {
     }
     
     //set the default screen to calendar
-    @State private var selection: Tab = .calendar
+    @State private var selection: Tab = .tasks
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TimesSaved.plist")
     
     //options for the tab
     enum Tab {
-        case calendar
+//        case calendar
         case tasks
         case settings
     }
@@ -35,11 +35,11 @@ struct ContentView: View {
         
         //MARK: - TabView Code
         TabView(selection: $selection) {
-            CalendarView()
-                .tabItem{
-                    Label("Calendar", systemImage: "calendar")
-                }
-                .tag(Tab.calendar)
+//            CalendarView()
+//                .tabItem{
+//                    Label("Calendar", systemImage: "calendar")
+//                }
+//                .tag(Tab.calendar)
             
             TaskView()
                 .tabItem{
